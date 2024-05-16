@@ -128,9 +128,10 @@ const getShortlisted = async (req, res) => {
   }
 };
 const jobPostAction = async (req, res) => {
-  const { jobRole, address, detail, city, pincode, date, gender, language } =
+  const { jobRole, address, detail, city, pincode, date, gender, language, start_date,end_date,start_time,end_time } =
     req.body;
   const userData = await signup.findOne({ email: req.session.email });
+  const current = new Date();
   const jobPost = {
     fullname: userData["fullname"],
     email: userData["email"],
@@ -142,6 +143,11 @@ const jobPostAction = async (req, res) => {
     date: date,
     language: language,
     pincode: pincode,
+    start_date:start_date,
+    end_date:end_date,
+    start_time:start_time,
+    end_time:end_time,
+    date:current.toISOString().split('T')[0]
   };
   res.render("jobPostCard", jobPost);
 };
@@ -301,7 +307,7 @@ const seekerDB = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      const jobs = await JobPost.find({ email: email,status: "Assigned" });
+      const jobs = await JobPost.find({ email: email,status: "In Progress" });
       res.render("seeker-DB",{job:jobs});
     } else {
       var message = "Login as service seeker not service provider";
@@ -334,16 +340,24 @@ const seekerDJR = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      console.log(req.query.reply)
-      if(req.query.reply.length != 0)
-        {
+      if(req.query.status == "Unassigned")
+        {if(req.query.reply.length != 0){
+
           const reply = req.query.reply.split(",");
           const providers = await provider.find({_id:{ $in: reply  }});
           res.render("seeker-DJR",{providers: providers,skill: req.query.skill,id:req.query.id,status:req.query.status});
         }
         else
         {
-      res.redirect("/seeker/dashboard")
+          res.redirect("/seeker/dashboard")
+        }
+      }
+        else
+        {
+          const ptr = await provider.findOne({_id:req.query.assignProv});
+          const pr  = [ptr];
+            res.render("seeker-DJR",{providers: pr,skill: req.query.skill,id:req.query.id,status:req.query.status});
+          
         }
     } else {
       var message = "Login as service seeker not service provider";
@@ -361,7 +375,7 @@ const seekerDJRA = async (req, res) => {
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
       await JobPost.updateOne({_id: req.query.jobID},{$pull: {reply: {$ne: req.query.provID}}});
-      await JobPost.updateOne({_id:req.query.jobID},{$set:{status: "Assigned",assignProv:req.query.provID}});
+      await JobPost.updateOne({_id:req.query.jobID},{$set:{status: "In Progress",assignProv:req.query.provID}});
       await provider.updateOne({_id:req.query.provID},{$push:{jobs: req.query.jobID}})
       res.render("seeker-dashboard");
     } else {
@@ -478,13 +492,13 @@ const seekerDSL = async (req, res) => {
 };
 
 const jobAssignAction = async (req, res) => {
-  const { jobRole, address, detail, city, pincode, date, gender, language,provEmail } =
+  const { jobRole,start_date,start_time,end_date,end_time, address, detail, city, pincode, date, gender, language,provEmail } =
     req.body;
   const userData = await signup.find({ email: req.session.email });
   console.log(userData)
   const prof = await provider.find({email:provEmail})
   const id = prof[0]["_id"]
-  console.log(id)
+  const current = new Date();
   const jobPost = new JobPost({
     fullname: userData[0]["fullname"],
     email: userData[0]["email"],
@@ -493,11 +507,15 @@ const jobAssignAction = async (req, res) => {
     hometown: city,
     detail: detail,
     skill: jobRole,
-    date: date,
     language: language,
     pincode: pincode,
     assignProv: id,
-    status:"Unapproved"
+    status:"Unapproved",
+    start_date:start_date,
+    end_date:end_date,
+    start_time:start_time,
+    end_time:end_time,
+    date:current.toISOString().split('T')[0]
   });
 jobPost.save();
   res.redirect("/seeker/dashboard");

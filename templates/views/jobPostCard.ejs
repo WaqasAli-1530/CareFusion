@@ -140,12 +140,32 @@
     
     <div class="text-line">
         <div class="text-field">
-            <span class="bold-text">Date:   </span>
+            <span class="bold-text">Posted on:   </span>
             <span class="normal-text"><%=date%></span>
         </div>
         <div class="text-field">
             <span class="bold-text">Language:   </span>
             <span class="normal-text"><%=language%></span>
+        </div>
+    </div>
+    <div class="text-line">
+        <div class="text-field">
+            <span class="bold-text">Start Date:   </span>
+            <span class="normal-text"><%=start_date%></span>
+        </div>
+        <div class="text-field">
+            <span class="bold-text">End Date:   </span>
+            <span class="normal-text"><%=end_date%></span>
+        </div>
+    </div>
+    <div class="text-line">
+        <div class="text-field">
+            <span class="bold-text">Start Time:   </span>
+            <span class="normal-text"><%=start_time%></span>
+        </div>
+        <div class="text-field">
+            <span class="bold-text">End Time:   </span>
+            <span class="normal-text"><%=end_time%></span>
         </div>
     </div>
     <div class="text-line">
@@ -156,7 +176,7 @@
     </div>
 
     <div class="button-container">
-        <a  onclick="window.location.href = `/seeker/jobPostCard?fullname=${'<%=fullname%>'}&email=${'<%=email%>'}&address=${'<%=address%>'}&gender=${'<%=gender%>'}&hometown=${'<%=hometown%>'}&detail=${'<%=detail%>'}&skill=${'<%=skill%>'}&date=${'<%=date%>'}&language=${'<%=language%>'}&pincode=${<%=pincode%>}`" <button class="button">Post</button></a>
+        <a  onclick="window.location.href = `/seeker/jobPostCard?fullname=${'<%=fullname%>'}&start_date=${'<%=start_date%>'}&end_date=${'<%=end_date%>'}&start_time=${'<%=start_time%>'}&end_time=${'<%=end_time%>'}&email=${'<%=email%>'}&address=${'<%=address%>'}&gender=${'<%=gender%>'}&hometown=${'<%=hometown%>'}&detail=${'<%=detail%>'}&skill=${'<%=skill%>'}&date=${'<%=date%>'}&language=${'<%=language%>'}&pincode=${<%=pincode%>}`" <button class="button">Post</button></a>
     </div>
     
 </div>

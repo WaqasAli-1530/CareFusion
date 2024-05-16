@@ -100,10 +100,10 @@ const jobView = async (req, res) => {
         skill: { $in: skill },
         status: "Unassigned",
       });
-      res.render("jobView", { jobs: jobs });
+      res.render("jobView", { job: jobs });
     } else {
       const jobs = [];
-      res.render("jobView", { jobs: jobs });
+      res.render("jobView", { job: jobs });
     }
   } catch (err) {
     console.log(err);
@@ -129,7 +129,7 @@ const stats = async (req, res) => {
     const prov = await provProfile.find({ email: req.session.email });
     console.log("Provider: " + prov);
     const provID = prov[0]["_id"];
-    const jobs = await jobpost.find({ status: "Assigned", assignProv: provID });
+    const jobs = await jobpost.find({ status: "In Progress", assignProv: provID });
     res.render("statistics", { jobs: jobs });
   }
 };
@@ -175,7 +175,7 @@ const confirm_job = async (req, res) => {
   const user = await provProfile.find({ email: req.session.email }).limit(1);
   if (user.length != 0) {
     const id = req.query.id;
-    await jobpost.updateOne({ _id: id }, { status: "Assigned" });
+    await jobpost.updateOne({ _id: id }, { status: "In Progress" });
     res.redirect("/provider/dashboard");
   } else {
     res.redirect("/provider/dashboard");

@@ -14,9 +14,9 @@
 <%- include('seeker-navigation.ejs') %>
 
 <% if(job.length == 0) { %>
-<h3 class="unknown"><b>You have no posted any job yet</b></h3>
+<h3 class="unknown"><b>You have no posted any service yet</b></h3>
 <% } else { %>
-    <h3 class="known"><b>Jobs Posted</b></h3>
+    <h3 class="known"><b>Services Posted</b></h3>
     
 
       <!--New End-->
@@ -45,31 +45,45 @@
                         <div class="formm-control">
                             <p><b>Gender :</b> <%= job[x]["gender"] %></p>
                         </div>
+                        <div class="formm-control">
+                            <p><b>Posted On: </b> <%= job[x]["date"].toISOString().split('T')[0] %></p>
+                        </div>
 	        <div class="formm-control">
-                            <p><b>Language :</b> <%= job[x]["language"] %></p>
+                            <p><b>Start Date :</b> <%= job[x]["start_date"].toISOString().split('T')[0] %></p>
+                        </div>
+	        <div class="formm-control">
+                            <p><b>End Date :</b> <%= job[x]["end_date"].toISOString().split('T')[0] %></p>
+                        </div>
+	        <div class="formm-control">
+                            <p><b>Start Time :</b> <%= job[x]["start_time"] %></p>
+                        </div>
+	        <div class="formm-control">
+                            <p><b>End Time :</b> <%= job[x]["end_time"] %></p>
+                        </div>
+	        <div class="formm-control">
+                            <p><b>Language Preference :</b> <%= job[x]["language"] %></p>
                         </div>
                         <div class="formm-control">
-                            <p><b>Provider needed on: </b> <%= job[x]["date"].toISOString().split('T')[0] %></p>
+                            <p></p>
                         </div>
+                        
 	        <div class="formm-control">
                             <p><b>Address :</b> <%= job[x]["address"] %></p>
                         </div>
 	        <div class="formm-control">
                             <p><b>Description about Service:</b> <%= job[x]["detail"] %></p>
                         </div>
-	        <div class="formm-control">
-                            <p></p>
-                        </div>
+	        
                         <% if (job[x]["status"] == "Unassigned") { %>
                             <div class="formm-control">
                                 <a href="/seeker/seekerDJR?reply=<%= job[x]["reply"] %>&skill=<%= job[x]["skill"] %>&id=<%= job[x]["_id"] %>&status=Unassigned" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">Request: <%= job[x]["reply"].length %></a>
                                         </div>
                         <% } else { %>
                         <div class="formm-control">
-                            <a href="/seeker/seekerDJR?reply=<%= job[x]["reply"] %>&skill=<%= job[x]["skill"] %>&id=<%= job[x]["_id"] %>&status=Assigned" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">See Profile</a>
+                            <a href="/seeker/seekerDJR?assignProv=<%= job[x]["assignProv"] %>&skill=<%= job[x]["skill"] %>&id=<%= job[x]["_id"] %>&status=In Progress" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">See Profile</a>
                                     </div>
                         <% } %>
-                        <% if (job[x]["status"] != "Assigned") { %>
+                        <% if (job[x]["status"] != "In Progress") { %>
                         <div class="formm-control">
                             <a href="/seeker/seekerDJD?job=<%= job[x]["_id"] %>" class="btn btn-danger border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-left: 250px;">Delete</a>
                                     </div>

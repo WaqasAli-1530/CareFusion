@@ -14,9 +14,9 @@
 <%- include('seeker-navigation.ejs') %>
 
 <% if(job.length == 0) { %>
-<h3 class="unknown"><b>You have no posted any job yet</b></h3>
+<h3 class="unknown"><b>You have no posted any service yet</b></h3>
 <% } else { %>
-    <h3 class="known"><b>Jobs Posted</b></h3>
+    <h3 class="known"><b>Services Posted</b></h3>
     
 
       <!--New End-->
@@ -27,37 +27,50 @@
 
             <div class="apply-box">
                 
-                      <div class="form-container">
-	      <div class="formm-control">
-                            <h4><b>Service Needed: </b> <%= job[x]["skill"] %></h4>
-                        </div>
-	       <div class="formm-control">
-                            
-                        </div>
-                        <div class="formm-control">
-                            <p><b>Name : </b> <%= job[x]["fullname"] %></p>
-                        </div>
-                        <div class="formm-control">
-                            <p><b>Email :</b> <%= job[x]["email"] %></p>
-                        </div>
-                        <div class="formm-control">
-                            <p><b>Gender :</b> <%= job[x]["gender"] %></p>
-                        </div>
-	        <div class="formm-control">
-                            <p><b>Language :</b> <%= job[x]["language"] %></p>
-                        </div>
-                        <div class="formm-control">
-                            <p><b>Provider needed on: </b> <%= job[x]["date"].toISOString().split('T')[0] %></p>
-                        </div>
-	        <div class="formm-control">
-                            <p><b>Address :</b> <%= job[x]["address"] %></p>
-                        </div>
-	        <div class="formm-control">
-                            <p><b>Description about Service:</b> <%= job[x]["detail"] %></p>
-                        </div>
-	        <div class="formm-control">
-                            <p></p>
-                        </div>
+                <div class="form-container">
+                    <div class="formm-control">
+                                      <h4><b>Service Needed: </b> <%= job[x]["skill"] %></h4>
+                                  </div>
+                     <div class="formm-control">
+                                      
+                                  </div>
+                                  <div class="formm-control">
+                                      <p><b>Name : </b> <%= job[x]["fullname"] %></p>
+                                  </div>
+                                  <div class="formm-control">
+                                      <p><b>Email :</b> <%= job[x]["email"] %></p>
+                                  </div>
+                                  <div class="formm-control">
+                                      <p><b>Gender :</b> <%= job[x]["gender"] %></p>
+                                  </div>
+                                  <div class="formm-control">
+                                      <p><b>Posted On: </b> <%= job[x]["date"].toISOString().split('T')[0] %></p>
+                                  </div>
+                      <div class="formm-control">
+                                      <p><b>Start Date :</b> <%= job[x]["start_date"].toISOString().split('T')[0] %></p>
+                                  </div>
+                      <div class="formm-control">
+                                      <p><b>End Date :</b> <%= job[x]["end_date"].toISOString().split('T')[0] %></p>
+                                  </div>
+                      <div class="formm-control">
+                                      <p><b>Start Time :</b> <%= job[x]["start_time"] %></p>
+                                  </div>
+                      <div class="formm-control">
+                                      <p><b>End Time :</b> <%= job[x]["end_time"] %></p>
+                                  </div>
+                      <div class="formm-control">
+                                      <p><b>Language Preference :</b> <%= job[x]["language"] %></p>
+                                  </div>
+                                  <div class="formm-control">
+                                      <p></p>
+                                  </div>
+                                  
+                      <div class="formm-control">
+                                      <p><b>Address :</b> <%= job[x]["address"] %></p>
+                                  </div>
+                      <div class="formm-control">
+                                      <p><b>Description about Service:</b> <%= job[x]["detail"] %></p>
+                                  </div>
                         
                     </div>
                     

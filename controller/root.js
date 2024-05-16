@@ -48,7 +48,9 @@ const loginAction = async (req, res) => {
     let profileImage = "";
 
     if (profile) {
+      
       let profileImage = profile.profilePicture;
+      console.log(profileImage)
       req.session.image = profileImage;
     }
     // console.log(req.session.user, "  ", req.session.email);

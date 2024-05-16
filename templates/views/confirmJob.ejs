@@ -29,7 +29,7 @@
             <li>
                 <a href="/provider/statistics">
                     <i class="fas fa-chart-bar"></i>
-                    <span>Assigned Jobs</span>
+                    <span>In Progress Services</span>
                 </a>
             </li>
             <li>
@@ -37,13 +37,13 @@
                 <li>
                     <a href="/provider/completejob">
                         <i class="fas fa-star"></i>
-                        <span>Complete Jobs</span>
+                        <span>Complete Services</span>
                     </a>
                 </li>
                 <li>
                     <a href="/provider/assignJobs">
                         <i class="fas fa-star"></i>
-                        <span>Suggested Jobs</span>
+                        <span>Suggested Services</span>
                     </a>
                 </li>
             </ul>
@@ -76,28 +76,41 @@
             </div>
             <div class="form-container mt-3">
                 <div class="formm-control">
-                    <p><b>Name:</b> <%= jobs[x]["fullname"] %></p>
+                    <p><b>Name : </b> <%= jobs[x]["fullname"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Email:</b> <%= jobs[x]["email"] %></p>
+                    <p><b>Email :</b> <%= jobs[x]["email"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Required Gender:</b> <%= jobs[x]["gender"] %></p>
+                    <p><b>Gender :</b> <%= jobs[x]["gender"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Language:</b> <%= jobs[x]["language"] %></p>
+                    <p><b>Posted On: </b> <%= jobs[x]["date"].toISOString().split('T')[0] %></p>
                 </div>
-                <div class="formm-control">
-                    <p><b>Provider needed on:</b> <%= jobs[x]["date"].toISOString().split('T')[0] %></p>
+    <div class="formm-control">
+                    <p><b>Start Date :</b> <%= jobs[x]["start_date"].toISOString().split('T')[0] %></p>
                 </div>
-                <div class="formm-control">
-                    <p><b>Address:</b> <%= jobs[x]["address"] %></p>
+    <div class="formm-control">
+                    <p><b>End Date :</b> <%= jobs[x]["end_date"].toISOString().split('T')[0] %></p>
                 </div>
-                <div class="formm-control">
-                    <p><b>Description about Service:</b> <%= jobs[x]["detail"] %></p>
+    <div class="formm-control">
+                    <p><b>Start Time :</b> <%= jobs[x]["start_time"] %></p>
+                </div>
+    <div class="formm-control">
+                    <p><b>End Time :</b> <%= jobs[x]["end_time"] %></p>
+                </div>
+    <div class="formm-control">
+                    <p><b>Language Preference :</b> <%= jobs[x]["language"] %></p>
                 </div>
                 <div class="formm-control">
                     <p></p>
+                </div>
+                
+    <div class="formm-control">
+                    <p><b>Address :</b> <%= jobs[x]["address"] %></p>
+                </div>
+    <div class="formm-control">
+                    <p><b>Description about Service:</b> <%= jobs[x]["detail"] %></p>
                 </div>
                 <div class="formm-control">
                     <a href="/provider/confirm_job?id=<%= jobs[x]["_id"] %>" style="margin-right:200px;" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2">Confirm Job</a> 

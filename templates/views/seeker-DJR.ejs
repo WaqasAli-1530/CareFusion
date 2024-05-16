@@ -21,9 +21,9 @@
 
 
     <% if(providers.length == 0) { %>
-        <h3 class="unknown"><b>No responses received on this job</b></h3>
+        <h3 class="unknown"><b>No responses received on this service</b></h3>
         <% } else { %>
-            <% if(status != "Assigned" ) { %>
+            <% if(status != "In Progress" ) { %>
             <h3 class="known"><b>Received Responses</b></h3>
             <% } else { %>
             <h3 class="known"><b>Assigned Provider</b></h3>
@@ -60,7 +60,7 @@
         <h4 class="fs-5 fw-bold">About</h4>
       <p><%= providers[x]["about"] %></p>
     </div>
-    <% if(status != "Assigned" ) { %>
+    <% if(status != "In Progress" ) { %>
     <div class="details-row">
       <div class="detail">
         <a href="/seeker/seekerDJRA?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>"><button class="apply-btn"><b>Approve</b></button></a>

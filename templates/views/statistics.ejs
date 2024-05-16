@@ -29,7 +29,7 @@
             <li>
                 <a href="/provider/statistics">
                     <i class="fas fa-chart-bar"></i>
-                    <span>Assigned Jobs</span>
+                    <span>In Progress Services</span>
                 </a>
             </li>
             <li>
@@ -37,13 +37,13 @@
                 <li>
                     <a href="/provider/completejob">
                         <i class="fas fa-star"></i>
-                        <span>Complete Jobs</span>
+                        <span>Complete Services</span>
                     </a>
                 </li>
                 <li>
                     <a href="/provider/assignJobs">
                         <i class="fas fa-star"></i>
-                        <span>Suggested Jobs</span>
+                        <span>Suggested Services</span>
                     </a>
                 </li>
                 
@@ -63,38 +63,54 @@
             <!-- Content -->
     <% if(jobs.length == 0) { %>
     <div class="container text-center mt-5">
-        <h3 class="unknown"><b>No Job Assigned To You!!!</b></h3>
+        <h3 class="unknown"><b>No Job In Progesss!!!</b></h3>
     </div>
     <% } else { %>
     <div class="container text-center mt-5">
-        <h3 class="known"><b>Assigned Jobs</b></h3>
+        <h3 class="known"><b>In-Progress-Services</b></h3>
     </div>
     <% for (var x = 0; x < jobs.length; x++) { %>
     <div class="container mt-5">
         <div class="apply-box p-3">
-            <div class="bg-danger text-white py-1 px-2 d-inline-block">
-                <p><%= jobs[x]["skill"] %></p>
+            <div style="border-radius: 8px; margin-bottom:-15px;" class="bg-danger text-white py-1 px-2 d-inline-block">
+                <p style="margin-top:7px;"><b><%= jobs[x]["skill"] %></b></p>
             </div>
             <div class="form-container mt-3">
                 <div class="formm-control">
-                    <p><b>Name:</b> <%= jobs[x]["fullname"] %></p>
+                    <p><b>Name : </b> <%= jobs[x]["fullname"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Email:</b> <%= jobs[x]["email"] %></p>
+                    <p><b>Email :</b> <%= jobs[x]["email"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Required Gender:</b> <%= jobs[x]["gender"] %></p>
+                    <p><b>Gender :</b> <%= jobs[x]["gender"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Language:</b> <%= jobs[x]["language"] %></p>
+                    <p><b>Posted On: </b> <%= jobs[x]["date"].toISOString().split('T')[0] %></p>
+                </div>
+    <div class="formm-control">
+                    <p><b>Start Date :</b> <%= jobs[x]["start_date"].toISOString().split('T')[0] %></p>
+                </div>
+    <div class="formm-control">
+                    <p><b>End Date :</b> <%= jobs[x]["end_date"].toISOString().split('T')[0] %></p>
+                </div>
+    <div class="formm-control">
+                    <p><b>Start Time :</b> <%= jobs[x]["start_time"] %></p>
+                </div>
+    <div class="formm-control">
+                    <p><b>End Time :</b> <%= jobs[x]["end_time"] %></p>
+                </div>
+    <div class="formm-control">
+                    <p><b>Language Preference :</b> <%= jobs[x]["language"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Provider needed on:</b> <%= jobs[x]["date"].toISOString().split('T')[0] %></p>
+                    <p></p>
                 </div>
-                <div class="formm-control">
-                    <p><b>Address:</b> <%= jobs[x]["address"] %></p>
+                
+    <div class="formm-control">
+                    <p><b>Address :</b> <%= jobs[x]["address"] %></p>
                 </div>
-                <div class="formm-control">
+    <div class="formm-control">
                     <p><b>Description about Service:</b> <%= jobs[x]["detail"] %></p>
                 </div>
                     

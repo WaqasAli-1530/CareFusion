@@ -40,6 +40,23 @@ const jobPostSchema =new schema({
         type: Date,
         default :Date.now()
     },
+    start_date:{
+        type: Date,
+        default :Date.now()
+    },
+    end_date:{
+        type: Date,
+        
+    },
+    start_time:{
+        type: String,
+        default :""
+    },
+    end_time:{
+        type: String,
+        default :""
+    },
+    
     language:{
         type: String,
         required: true

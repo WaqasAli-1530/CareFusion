@@ -22,7 +22,7 @@
                     who will be in touch once the job has been posted.
                 </p>
             </div>
-            <h1 class="form-control">Assign job to selected provider<span class="title"></span></h1>
+            <h1 class="form-control">Assign Service to selected provider<span class="title"></span></h1>
             <div class="form-container">
                 <div class="form-control">
                     <label for="jobRole">Job Category</label>
@@ -47,9 +47,22 @@
                     <input type="number" id="pincode" name="pincode" placeholder="Enter Pin Code">
                 </div>
                 <div class="form-control">
-                    <label for="date">Date</label>
-                    <input type="date" id="date" name="date" value="2024-10-24">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date">
                 </div>
+                <div class="form-control">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date">
+                </div>
+                <div class="form-control">
+                    <label for="start_time">Start time:</label>
+                    <input type="time" id="start_time" name="start_time">
+                </div>
+                <div class="form-control">
+                    <label for="end_time">End time:</label>
+                    <input type="time" id="end_time" name="end_time">
+                </div>
+                
 
                 <!-- Added Gender Selection -->
                 <div class="form-control">
@@ -66,10 +79,9 @@
                         <option value="english">English</option>
                     </select>
                 </div>
-                <br>
                 <input type="hidden" id="provEmail" name="provEmail" value="<%=provEmail%>">
                 <div class="button-container">
-                    <button type="submit">Assign Job</button>
+                    <button type="submit">Assign Service</button>
                 </div>
             </div>
         </form>
