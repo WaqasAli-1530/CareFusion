@@ -128,7 +128,7 @@ const getShortlisted = async (req, res) => {
   }
 };
 const jobPostAction = async (req, res) => {
-  const { jobRole, address, detail, city, pincode, date, gender, language, start_date,end_date,start_time,end_time } =
+  const { jobRole, address, detail, price,city, pincode, date, gender, language, start_date,end_date,start_time,end_time } =
     req.body;
   const userData = await signup.findOne({ email: req.session.email });
   const current = new Date();
@@ -147,6 +147,7 @@ const jobPostAction = async (req, res) => {
     end_date:end_date,
     start_time:start_time,
     end_time:end_time,
+    price:price,
     date:current.toISOString().split('T')[0]
   };
   res.render("jobPostCard", jobPost);

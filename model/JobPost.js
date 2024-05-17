@@ -65,6 +65,10 @@ const jobPostSchema =new schema({
         type: String,
         default: "Unassigned"
     },
+    price:{
+        type: Number,
+        required: true
+    },
     reply:{
         type:[String],
         default:[]

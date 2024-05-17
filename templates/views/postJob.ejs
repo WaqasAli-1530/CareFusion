@@ -5,6 +5,13 @@
     <title>SERVICE SEEKER</title>
     <link rel="stylesheet" href="/css/postJob.css">
     <script src="/scripts/postJob.js"></script>
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    </style>
 </head>
 <body>
 
@@ -92,6 +99,10 @@
                         <option value="english">English</option>
                     </select>
                 </div>
+                <div class="form-control">
+                    <label for="price">Price (Rs)</label>
+                    <input type="number" id="price" name="price">
+                </div><br>
                 <div class="button-container">
                     <button type="submit">Create Service</button>
                 </div>
