@@ -81,7 +81,7 @@
     <% if(providers.length == 0) { %>
         <h3 class="unknown"><b>No workers has been shortlisted yet...</b></h3>
         <% } else { %>
-            <h3 class="known"><b>Shortlist Workers</b></h3>
+            <h3 class="known"><b>Shortlist Workers (<%= providers.length %>)</b></h3>
             <% for (var x = 0; x < providers.length; x++) { %>
             <div class="card">
   <div class="header">
@@ -113,6 +113,19 @@
         <p><%= providers[x]["hometown"] %></p>
       </div>
     </div>
+    <div class="details-row">
+      <% for(let k = 0 ; k < data.length; k++){ %>
+          <% if(data[k].id == providers[x]["_id"]){ %>
+          <div class="detail">
+            <h4 class="fs-5 fw-bold">Services Completed</h4>
+            <p><%= data[k].comp %></p>
+          </div>
+          <div class="detail">
+            <h4 class="fs-5 fw-bold">Services In Progress</h4>
+            <p><%= data[k].prog %></p>
+          </div>
+        <% } }%>
+        </div>
     <div class="details">
         <h4 class="fs-5 fw-bold">About</h4>
       <p><%= providers[x]["about"] %></p>
@@ -123,6 +136,10 @@
         <a href="/seeker/jobAssign?skill=<%=ax%>&provEmail=<%=providers[x]["email"]%>&gen=<%= providers[x]["gender"] %>"><button style="background: blue;" class="apply-btn"><b>Assign job</b></button></a>
         </a>
             </div>
+            <div style = "margin-top: 15px;" class="detail">
+              <a  href="/chat"><img src="/images/cmt.svg" width="40"></i>
+              </a>
+                  </div>
       <div class="detail">
         <a href="/seeker/deleteShortlistedAssign?email=<%=providers[x]["email"]%>"><button style="background: red;" class="apply-btn"><b>Ignore</b></button></a>
     </div>

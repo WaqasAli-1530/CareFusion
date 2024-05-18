@@ -122,13 +122,14 @@
       }
       */
       .card {
-        width: 500px;
+        width: 800px;
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 3 6px 8px rgba(0, 0, 0, 0.4);
         margin: 20px auto;
         position: relative;
         overflow: hidden;
         background-color: white;
+        padding: 1.5%;
       }
       
       

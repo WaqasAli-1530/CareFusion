@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const schema= mongoose.Schema;
-
+const provSkillSchema = new mongoose.Schema({
+    id: String,
+    price: Number,
+  });
 const jobPostSchema =new schema({
     fullname: {
         type: String,
@@ -69,10 +72,8 @@ const jobPostSchema =new schema({
         type: Number,
         required: true
     },
-    reply:{
-        type:[String],
-        default:[]
-    },
+    reply:[provSkillSchema],
+        
     assignProv:{
         type:String,
         default:""

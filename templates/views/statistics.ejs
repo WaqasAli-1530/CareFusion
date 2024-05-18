@@ -121,11 +121,11 @@
             <!-- Content -->
     <% if(jobs.length == 0) { %>
     <div class="container text-center mt-5">
-        <h3 class="unknown"><b>No Job In Progesss!!!</b></h3>
+        <h3 class="unknown"><b>No Services In Progesss!!!</b></h3>
     </div>
     <% } else { %>
     <div class="container text-center mt-5">
-        <h3 class="known"><b>In-Progress-Services</b></h3>
+        <h3 class="known"><b>In Progress Services (<%= jobs.length %>)</b></h3>
     </div>
     <% for (var x = 0; x < jobs.length; x++) { %>
     <div class="container mt-5">
@@ -162,8 +162,7 @@
                     <p><b>Language Preference :</b> <%= jobs[x]["language"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Price :</b> Rs.<%= jobs[x]["price"] %></p>
-                </div>
+                    <p><b>Price (Rs): </b><%= jobs[x]["price"] %></p>                </div>
                 
     <div class="formm-control">
                     <p><b>Address :</b> <%= jobs[x]["address"] %></p>

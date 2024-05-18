@@ -145,19 +145,35 @@ const completejob = async (req, res) => {
   }
 };
 const applyjob = async (req, res) => {
-  console.log(req.query);
-  const user = await provProfile.find({ email: req.session.email }).limit(1);
-  if (user.length != 0) {
-    const prov_id = user[0]["_id"];
-    await jobpost.updateOne(
-      { _id: req.query.id },
-      { $push: { reply: prov_id } }
-    );
-    res.redirect("/");
-  } else {
-    res.redirect("/provider/viewJob");
+  try {
+    console.log(req.query);
+    const user = await provProfile.find({ email: req.session.email }).limit(1);
+    if (user.length !== 0) {
+      const prov_id = user[0]["_id"];
+      const price = req.query.price; // Retrieve the price from query parameters
+
+      let update;
+      if (price) {
+        update = { $push: { reply: { id: prov_id, price: price } } };
+      } else {
+        update = { $push: { reply: { id: prov_id } } };
+      }
+
+      await jobpost.updateOne(
+        { _id: req.query.id },
+        update
+      );
+
+      res.redirect("/");
+    } else {
+      res.redirect("/provider/viewJob");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 const assignJobs = async (req, res) => {
   console.log(req.query);
   const user = await provProfile.find({ email: req.session.email }).limit(1);

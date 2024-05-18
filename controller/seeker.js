@@ -128,8 +128,21 @@ const getShortlisted = async (req, res) => {
   }
 };
 const jobPostAction = async (req, res) => {
-  const { jobRole, address, detail, price,city, pincode, date, gender, language, start_date,end_date,start_time,end_time } =
-    req.body;
+  const {
+    jobRole,
+    address,
+    detail,
+    price,
+    city,
+    pincode,
+    date,
+    gender,
+    language,
+    start_date,
+    end_date,
+    start_time,
+    end_time,
+  } = req.body;
   const userData = await signup.findOne({ email: req.session.email });
   const current = new Date();
   const jobPost = {
@@ -143,12 +156,12 @@ const jobPostAction = async (req, res) => {
     date: date,
     language: language,
     pincode: pincode,
-    start_date:start_date,
-    end_date:end_date,
-    start_time:start_time,
-    end_time:end_time,
-    price:price,
-    date:current.toISOString().split('T')[0]
+    start_date: start_date,
+    end_date: end_date,
+    start_time: start_time,
+    end_time: end_time,
+    price: price,
+    date: current.toISOString().split("T")[0],
   };
   res.render("jobPostCard", jobPost);
 };
@@ -203,7 +216,7 @@ const update_account = async (req, res) => {
   try {
     await signup.updateOne(
       {
-        email: email
+        email: email,
       },
       {
         $set: {
@@ -211,12 +224,11 @@ const update_account = async (req, res) => {
           phoneno: req.body.phone,
           username: req.body.username,
           address: req.body.address,
-        }
+        },
       }
-    )
-    console.log(req.body)
-    
-    
+    );
+    console.log(req.body);
+
     res.redirect("/seeker/dashboard");
   } catch (err) {
     console.log(err);
@@ -263,8 +275,8 @@ const seekerDJ = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      const jobs = await JobPost.find({ email: email })
-      res.render("seeker-DJ",{job:jobs});
+      const jobs = await JobPost.find({ email: email });
+      res.render("seeker-DJ", { job: jobs });
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -282,17 +294,15 @@ const seekerDW = async (req, res) => {
     if (signedUpAs === "Service Seeker") {
       const jobs = await JobPost.find({ email: email });
       const workers = [];
-      for(let i = 0; i < jobs.length;i++)
-        {
-          if(jobs[i]["assignProv"] != "")
-            {
-              workers.push(jobs[i]["assignProv"]);
-            }
-        } 
-        console.log(workers);
+      for (let i = 0; i < jobs.length; i++) {
+        if (jobs[i]["assignProv"] != "") {
+          workers.push(jobs[i]["assignProv"]);
+        }
+      }
+      console.log(workers);
 
-      const work = await provider.find({_id:{$in: workers}});
-      res.render("seeker-DW",{providers: work});
+      const work = await provider.find({ _id: { $in: workers } });
+      res.render("seeker-DW", { providers: work });
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -308,8 +318,8 @@ const seekerDB = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      const jobs = await JobPost.find({ email: email,status: "In Progress" });
-      res.render("seeker-DB",{job:jobs});
+      const jobs = await JobPost.find({ email: email, status: "In Progress" });
+      res.render("seeker-DB", { job: jobs });
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -325,7 +335,8 @@ const seekerDIN = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      res.render("seeker-DIN");
+      const jobs = await JobPost.find({ email: email,status:"Complete" });
+      res.render("seeker-DCS",{ job: jobs });
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -341,25 +352,66 @@ const seekerDJR = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      if(req.query.status == "Unassigned")
-        {if(req.query.reply.length != 0){
+      if (req.query.status == "Unassigned") {
+        const jobs = await JobPost.findOne({ _id:req.query.id });
+        const _reply = jobs.reply;
+        if (_reply !== 0) {
+          const reply = [];
+          for (let i = 0; i < _reply.length; i++) {
+            reply.push(_reply[i].id);
+          }
+          const data = []
+          for(let i = 0; i < reply.length; i++)
+            {
+              var cmp = await JobPost.find({ assignProv: reply[i], status: "Complete" });
+              var cmp = cmp.length;
+              var prg = await JobPost.find({ assignProv: reply[i], status: "In Progress" });
+              var prg = prg.length;
+              data.push({
+                comp: cmp,
+                prog: prg,
+                id: reply[i]
+              })
+            }
+            console.log(data)
+          const providers = await provider.find({ _id: { $in: reply } });
+          res.render("seeker-DJR", {
+            providers: providers,
+            skill: req.query.skill,
+            id: req.query.id,
+            status: req.query.status,
+            bid: _reply,
+            data: data
+          });
+        } else {
+          res.redirect("/seeker/dashboard");
+        }
+      } else {
+        const ptr = await provider.findOne({ _id: req.query.assignProv });
+        const pr = [ptr];
+        const data = [];
+        var cmp = await JobPost.find({ assignProv: req.query.assignProv, status: "Complete" });
+        var cmp = cmp.length;
+        var prg = await JobPost.find({ assignProv: req.query.assignProv, status: "In Progress" });
+        var prg = prg.length;
+        var pri = await JobPost.findOne({ _id: req.query.id });
+        var pri = pri.price;
+        console.log(pri);
+        data.push({
+          comp: cmp,
+          prog: prg,
+          id: req.query.assignProv
+        })
+        res.render("seeker-DJR", {
+          providers: pr,
+          skill: req.query.skill,
+          id: req.query.id,
+          status: req.query.status,
+          data: data,
+          bid: [{price: pri,id: req.query.assignProv}]
 
-          const reply = req.query.reply.split(",");
-          const providers = await provider.find({_id:{ $in: reply  }});
-          res.render("seeker-DJR",{providers: providers,skill: req.query.skill,id:req.query.id,status:req.query.status});
-        }
-        else
-        {
-          res.redirect("/seeker/dashboard")
-        }
+        });
       }
-        else
-        {
-          const ptr = await provider.findOne({_id:req.query.assignProv});
-          const pr  = [ptr];
-            res.render("seeker-DJR",{providers: pr,skill: req.query.skill,id:req.query.id,status:req.query.status});
-          
-        }
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -375,9 +427,26 @@ const seekerDJRA = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      await JobPost.updateOne({_id: req.query.jobID},{$pull: {reply: {$ne: req.query.provID}}});
-      await JobPost.updateOne({_id:req.query.jobID},{$set:{status: "In Progress",assignProv:req.query.provID}});
-      await provider.updateOne({_id:req.query.provID},{$push:{jobs: req.query.jobID}})
+      await JobPost.updateOne(
+        { _id: req.query.jobID },
+        { $pull: { reply: { $ne: req.query.provID } } }
+      );
+      await JobPost.updateOne(
+        { _id: req.query.jobID },
+        { $set: { status: "In Progress", assignProv: req.query.provID } }
+      );
+      await provider.updateOne(
+        { _id: req.query.provID },
+        { $push: { jobs: req.query.jobID } }
+      );
+      const price = req.query.price;
+      if(price != undefined)
+        {
+          await JobPost.updateOne(
+            { _id: req.query.jobID },
+            { $set: { price: price } }
+          );
+        }
       res.render("seeker-dashboard");
     } else {
       var message = "Login as service seeker not service provider";
@@ -394,8 +463,11 @@ const seekerDJRI = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      await JobPost.updateOne({_id: req.query.jobID},{$pull: {reply: req.query.provID}});
-      console.log(req.query.skill)
+      await JobPost.updateOne(
+        { _id: req.query.jobID },
+        { $pull: { reply: req.query.provID } }
+      );
+      console.log(req.query.skill);
       res.render("seeker-dashboard");
     } else {
       var message = "Login as service seeker not service provider";
@@ -413,7 +485,7 @@ const seekerDJD = async (req, res) => {
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
       const query = req.query.job;
-      await JobPost.deleteOne({_id:query})
+      await JobPost.deleteOne({ _id: query });
       res.redirect("/seeker/seekerDJ");
     } else {
       var message = "Login as service seeker not service provider";
@@ -453,7 +525,11 @@ const jobAssign = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      res.render("jobAssign",{skill:req.query.skill,provEmail:req.query.provEmail,gen:req.query.gen});
+      res.render("jobAssign", {
+        skill: req.query.skill,
+        provEmail: req.query.provEmail,
+        gen: req.query.gen,
+      });
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -469,20 +545,32 @@ const seekerDSL = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      const shortlist = await ShortlistModel.find({shortlisted_by:req.session.email});
-      if(shortlist.length != 0)
-        {
-      const x = shortlist[0]["shortlisted"];
-      const prov = [];
-      for(let i=0;i<x.length;i++)
-        {
+      const shortlist = await ShortlistModel.find({
+        shortlisted_by: req.session.email,
+      });
+      if (shortlist.length != 0) {
+        const x = shortlist[0]["shortlisted"];
+        const prov = [];
+        for (let i = 0; i < x.length; i++) {
           prov.push(x[i]["prov_mail"]);
         }
-        const provid = await provider.find({email:{$in: prov}});
-        res.render("seeker-DSL",{providers:provid,xv:x});
-      }else
-      {
-        res.render("seeker-DSL",{providers:[],xv:""});
+        const provid = await provider.find({ email: { $in: prov } });
+        const data = []
+          for(let i = 0; i < provid.length; i++)
+            {
+              var cmp = await JobPost.find({ assignProv: provid[i]["_id"], status: "Complete" });
+              var cmp = cmp.length;
+              var prg = await JobPost.find({ assignProv: provid[i]["_id"], status: "In Progress" });
+              var prg = prg.length;
+              data.push({
+                comp: cmp,
+                prog: prg,
+                id: provid[i]["_id"]
+              })
+            }
+        res.render("seeker-DSL", { providers: provid, xv: x,data:data });
+      } else {
+        res.render("seeker-DSL", { providers: [], xv: "" });
       }
     } else {
       var message = "Login as service seeker not service provider";
@@ -493,12 +581,26 @@ const seekerDSL = async (req, res) => {
 };
 
 const jobAssignAction = async (req, res) => {
-  const { jobRole,start_date,start_time,end_date,end_time, address, detail, city, pincode, date, gender, language,provEmail } =
-    req.body;
+  const {
+    jobRole,
+    start_date,
+    start_time,
+    end_date,
+    end_time,
+    address,
+    detail,
+    city,
+    pincode,
+    date,
+    gender,
+    language,
+    provEmail,
+    price
+  } = req.body;
   const userData = await signup.find({ email: req.session.email });
-  console.log(userData)
-  const prof = await provider.find({email:provEmail})
-  const id = prof[0]["_id"]
+  console.log(userData);
+  const prof = await provider.find({ email: provEmail });
+  const id = prof[0]["_id"];
   const current = new Date();
   const jobPost = new JobPost({
     fullname: userData[0]["fullname"],
@@ -511,14 +613,15 @@ const jobAssignAction = async (req, res) => {
     language: language,
     pincode: pincode,
     assignProv: id,
-    status:"Unapproved",
-    start_date:start_date,
-    end_date:end_date,
-    start_time:start_time,
-    end_time:end_time,
-    date:current.toISOString().split('T')[0]
+    status: "Unapproved",
+    start_date: start_date,
+    end_date: end_date,
+    start_time: start_time,
+    end_time: end_time,
+    date: current.toISOString().split("T")[0],
+    price: price
   });
-jobPost.save();
+  jobPost.save();
   res.redirect("/seeker/dashboard");
 };
 const deleteShortlistedAssign = async (req, res) => {
@@ -582,5 +685,5 @@ module.exports = {
   seekerDSL,
   jobAssign,
   jobAssignAction,
-  deleteShortlistedAssign
+  deleteShortlistedAssign,
 };

@@ -228,8 +228,8 @@
     </div>
     <div class="text-line">
         <div class="text-field">
-            <span class="bold-text">Price:   </span>
-            <span class="normal-text">Rs.<%=price%></span>
+            <span class="bold-text">Price(Rs):   </span>
+            <span class="normal-text"><%=price%></span>
         </div>
     </div>
     <div class="text-line">
@@ -238,7 +238,6 @@
             <span class="normal-text"><%=detail%></span>
         </div>
     </div>
-
     <div class="button-container">
         <a  onclick="window.location.href = `/seeker/jobPostCard?fullname=${'<%=fullname%>'}&price=${'<%=price%>'}&start_date=${'<%=start_date%>'}&end_date=${'<%=end_date%>'}&start_time=${'<%=start_time%>'}&end_time=${'<%=end_time%>'}&email=${'<%=email%>'}&address=${'<%=address%>'}&gender=${'<%=gender%>'}&hometown=${'<%=hometown%>'}&detail=${'<%=detail%>'}&skill=${'<%=skill%>'}&date=${'<%=date%>'}&language=${'<%=language%>'}&pincode=${<%=pincode%>}`" <button class="button">Post</button></a>
     </div>

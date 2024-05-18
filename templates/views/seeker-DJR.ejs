@@ -82,7 +82,7 @@
         <h3 class="unknown"><b>No responses received on this service</b></h3>
         <% } else { %>
             <% if(status != "In Progress" ) { %>
-            <h3 class="known"><b>Received Responses</b></h3>
+            <h3 class="known"><b>Received Responses (<%= providers.length %>)</b></h3>
             <% } else { %>
             <h3 class="known"><b>Assigned Provider</b></h3>
             <% } %>
@@ -103,17 +103,44 @@
         <h4 class="fs-5 fw-bold">CNIC</h4>
         <p><%= providers[x]["cnic"] %></p>
       </div>
-    </div>
-    <div class="details-row">
       <div class="detail">
         <h4 class="fs-5 fw-bold">Skill</h4>
         <p><%= skill %></p>
       </div>
+    </div>
+    <div class="details-row">
+      <% for(let k = 0 ; k < data.length; k++){ %>
+          <% if(data[k].id == providers[x]["_id"]){ %>
+          <div class="detail">
+            <h4 class="fs-5 fw-bold">Services Completed</h4>
+            <p><%= data[k].comp %></p>
+          </div>
+          <div class="detail">
+            <h4 class="fs-5 fw-bold">Services In Progress</h4>
+            <p><%= data[k].prog %></p>
+          </div>
+        <% } }%>
       <div class="detail">
-        <h4 class="fs-5 fw-bold">Home Town</h4>
-        <p><%= providers[x]["hometown"] %></p>
+        <% for(let k = 0 ; k < data.length; k++){ %>
+          <% if(bid[k].id == providers[x]["_id"]){ %>
+          <div class="detail">
+            <h4 class="fs-5 fw-bold">Service Price</h4>
+            <% if(bid[k].price > 0){ %>
+            <p><%= bid[k].price %></p>
+          </div>
+            <% } else { %>
+              <p>Default</p>
+          </div>
+        <% } }}%>
       </div>
     </div>
+   
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Address</h4>
+        <p><%= providers[x]["address"] %></p>
+      </div>
+      
+    
     <div class="details">
         <h4 class="fs-5 fw-bold">About</h4>
       <p><%= providers[x]["about"] %></p>
@@ -121,8 +148,17 @@
     <% if(status != "In Progress" ) { %>
     <div class="details-row">
       <div class="detail">
-        <a href="/seeker/seekerDJRA?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>"><button class="apply-btn"><b>Approve</b></button></a>
-        <a href="/chat"><img src="/images/cmt.svg" width="40"></i>
+        <% for(let k = 0 ; k < data.length; k++){ %>
+        <% if(bid[k].id == providers[x]["_id"]){ %>
+        <% if(bid[k].price > 0){ %>
+          <a href="/seeker/seekerDJRA?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>&price=<%= bid[k].price %>"><button class="apply-btn"><b>Approve</b></button></a>
+          <% } else { %>
+            <a href="/seeker/seekerDJRA?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>"><button class="apply-btn"><b>Approve</b></button></a>
+      <% } }}%>
+        
+      </div>
+        <div style = "margin-top: 15px;" class="detail">
+        <a  href="/chat"><img src="/images/cmt.svg" width="40"></i>
         </a>
             </div>
       <div class="detail">

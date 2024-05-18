@@ -124,7 +124,7 @@
     </div>
     <% } else { %>
     <div class="container text-center mt-5">
-        <h3 class="known"><b>Complete Jobs</b></h3>
+        <h3 class="known"><b>Complete Jobs (<%= jobs.length %>)</b></h3>
     </div>
     <% for (var x = 0; x < jobs.length; x++) { %>
     <div class="container mt-5">
@@ -161,7 +161,7 @@
                     <p><b>Language Preference :</b> <%= jobs[x]["language"] %></p>
                 </div>
                 <div class="formm-control">
-                    <p><b>Price :</b> Rs.<%= jobs[x]["price"] %></p>
+                    <p><b>Price (Rs): </b><%= jobs[x]["price"] %></p>
                 </div>
                 
     <div class="formm-control">

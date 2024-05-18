@@ -75,7 +75,7 @@
 <% if(job.length == 0) { %>
 <h3 class="unknown"><b>You have no posted any service yet</b></h3>
 <% } else { %>
-    <h3 class="known"><b>Services Posted</b></h3>
+    <h3 class="known"><b>Currently Bookings (<%= job.length %>)</b></h3>
     
 
       <!--New End-->
@@ -121,8 +121,7 @@
                                       <p><b>Language Preference :</b> <%= job[x]["language"] %></p>
                                   </div>
                                   <div class="formm-control">
-                                    <p><b>Price :</b> Rs.<%= job[x]["price"] %></p>
-                                </div>
+                                    <p><b>Price (Rs): </b><%= job[x]["price"] %></p>                                </div>
                                   
                       <div class="formm-control">
                                       <p><b>Address :</b> <%= job[x]["address"] %></p>
