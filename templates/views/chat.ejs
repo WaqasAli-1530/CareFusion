@@ -32,6 +32,14 @@
         nme = "Anonymous";
 }
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          setTimeout(function() {
+            document.getElementById('loader-wrapper').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+          }, 1000); // Adjust the timeout duration as needed
+        });
+      </script>
 </body>
 
 </html>

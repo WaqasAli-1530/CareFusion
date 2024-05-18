@@ -7,8 +7,66 @@
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <title>Search Workers</title>
 
-</head>
-<body>
+    <style>
+        #loader-wrapper {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.8); /* Light black background */
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              z-index: 1000;
+            }
+        
+            .loader {
+              display: flex;
+              justify-content: space-around;
+              width: 60px;
+            }
+        
+            .dot {
+              width: 15px;
+              height: 15px;
+              background-color: white;
+              border-radius: 50%;
+              animation: blink 1.4s infinite both;
+            }
+        
+            .dot:nth-child(1) {
+              animation-delay: 0s;
+            }
+        
+            .dot:nth-child(2) {
+              animation-delay: 0.2s;
+            }
+        
+            .dot:nth-child(3) {
+              animation-delay: 0.4s;
+            }
+        
+            @keyframes blink {
+              0%, 80%, 100% {
+                opacity: 0;
+              }
+              40% {
+                opacity: 1;
+              }
+            }
+        
+        </style>
+        
+          </head>
+        <body>
+        <div id="loader-wrapper">
+            <div class="loader">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+          </div>
     <div class="sidebar">
         <h1 class="logo"> Find a Worker </h1>
         <div class="menus">
@@ -53,6 +111,14 @@
         </div>
     </div>
     <div id="detail" class="detail"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          setTimeout(function() {
+            document.getElementById('loader-wrapper').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+          }, 1000); // Adjust the timeout duration as needed
+        });
+      </script>
 </body>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
