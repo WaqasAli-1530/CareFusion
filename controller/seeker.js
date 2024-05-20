@@ -352,6 +352,11 @@ const payment = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
+      console.log(req.query);
+      console.log("In payment");
+      const x = await JobPost.findOne({_id:req.query.id})
+      const amount = x["price"]*100;
+      console.log(amount);
       // strip payment
       stripe.customers.create({
         email: req.body.stripeEmail,
@@ -368,7 +373,7 @@ const payment = async (req, res) => {
     .then((customer) => {
  
         return stripe.charges.create({
-            amount: req.body.price,     // Charging Rs 25
+            amount: amount,     // Charging Rs 25
             description: 'Service Completed',
             currency: 'pkr',
             customer: customer.id

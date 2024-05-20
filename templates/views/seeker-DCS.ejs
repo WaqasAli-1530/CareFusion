@@ -144,6 +144,9 @@
                         <% } else { %>
                         <div class="formm-control">
                             <a href="/seeker/seekerDJR?assignProv=<%= job[x]["assignProv"] %>&skill=<%= job[x]["skill"] %>&id=<%= job[x]["_id"] %>&status=In Progress" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">See Profile</a>
+                          </div>
+                            <% if (job[x]["payment"] == "Pending") { %>
+                              <div class="formm-control">
                             <form action="/seeker/payment?price=<%= job[x]["price"] %>*100&id=<%= job[x]["_id"] %>" method="POST">
                               <script
                                 src="//checkout.stripe.com/v2/checkout.js"
@@ -152,12 +155,12 @@
                                 data-amount="<%= job[x]["price"] %>*100"
                                 data-currency="pkr"
                                 data-name="<%= job[x]["skill"] %>"
-                                data-description="Congrats! job[x]["skill"] is Complete"
+                                data-description="Congrats on completing Service"
                                 data-locale="auto" >
                                 </script>
                               </form>
                                     </div>
-                        <% } %>
+                        <% } }%>
                         <% if (job[x]["status"] == "Unassigned" || job[x]["status"] == "Unapproved  ") { %>
                         <div class="formm-control">
                             <a href="/seeker/seekerDJD?job=<%= job[x]["_id"] %>" class="btn btn-danger border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-left: 250px;">Delete</a>
