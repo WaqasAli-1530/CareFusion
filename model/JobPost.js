@@ -77,7 +77,12 @@ const jobPostSchema =new schema({
     assignProv:{
         type:String,
         default:""
+    },
+    payment:{
+        type:String,
+        default:""
     }
+
     
     
 })

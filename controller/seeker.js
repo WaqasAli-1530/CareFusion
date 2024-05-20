@@ -2,7 +2,7 @@ const provider = require("../model/provider");
 const ShortlistModel = require("../model/shortlisted");
 const signup = require("../model/signup");
 const JobPost = require("../model/JobPost");
-
+const stripe = require('stripe')(process.env.STRIP_PRIVATE_KEY)
 const getCategory = async (req, res) => {
   const x = req.params.skills;
   console.log("In get category");
@@ -336,7 +336,56 @@ const seekerDIN = async (req, res) => {
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
       const jobs = await JobPost.find({ email: email,status:"Complete" });
-      res.render("seeker-DCS",{ job: jobs });
+      res.render("seeker-DCS",{ job: jobs,key:process.env.STRIP_PUBLIC_KEY });
+    } else {
+      var message = "Login as service seeker not service provider";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
+    }
+  }
+};
+const payment = async (req, res) => {
+  if (req.session.user === undefined || req.session.user === "Visitor") {
+    res.render("login", { message: "Please login to get Account details" });
+  } else {
+    const email = req.session.email;
+    const user = await signup.find({ email: email }).limit(1);
+    const signedUpAs = user[0]["signedUpAs"];
+    if (signedUpAs === "Service Seeker") {
+      // strip payment
+      stripe.customers.create({
+        email: req.body.stripeEmail,
+        source: req.body.stripeToken,
+        name: 'Gourav Hammad',
+        address: {
+            line1: 'TC 9/4 Old MES colony',
+            postal_code: '452331',
+            city: 'Indore',
+            state: 'Madhya Pradesh',
+            country: 'India',
+        }
+    })
+    .then((customer) => {
+ 
+        return stripe.charges.create({
+            amount: req.body.price,     // Charging Rs 25
+            description: 'Service Completed',
+            currency: 'pkr',
+            customer: customer.id
+        });
+    })
+    .then(async (charge) => {
+      await JobPost.updateOne(
+        { _id: req.query.id },
+        { $set: { payment: "Complete"} }
+      ); 
+        res.redirect("/seeker/dashboard")  // If no error occurs
+    })
+    .catch((err) => {
+        res.send(err)       // If some error occurs
+    });
+
+    // end
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -433,7 +482,7 @@ const seekerDJRA = async (req, res) => {
       );
       await JobPost.updateOne(
         { _id: req.query.jobID },
-        { $set: { status: "In Progress", assignProv: req.query.provID } }
+        { $set: { status: "In Progress",payment: "Pending", assignProv: req.query.provID } }
       );
       await provider.updateOne(
         { _id: req.query.provID },
@@ -662,6 +711,7 @@ const deleteShortlistedAssign = async (req, res) => {
     res.status(500).send({ result: "error" });
   }
 };
+
 module.exports = {
   getCategory,
   shortlist,
@@ -686,4 +736,5 @@ module.exports = {
   jobAssign,
   jobAssignAction,
   deleteShortlistedAssign,
+  payment
 };

@@ -99,6 +99,70 @@ io.on("connection", (socket) =>{
     })
 })
 
+
+ 
+// // strip code sender
+
+// const stripe = require('stripe')(process.env.STRIP_PRIVATE_KEY); // Replace with your test secret key
+
+// // Function to create connected account
+// async function createConnectedAccount(email) {
+//     const account = await stripe.accounts.create({
+//         type: 'standard',
+//         email: email,
+//     });
+//     return account.id;
+// }
+
+// // Function to create a payment intent and transfer funds to connected account
+// async function createPaymentIntent(amount, currency, paymentMethodId, connectedAccountId) {
+//     const paymentIntent = await stripe.paymentIntents.create({
+//         amount: amount,
+//         currency: currency,
+//         payment_method: paymentMethodId,
+//         // confirm: true,
+//         transfer_data: {
+//             destination: connectedAccountId,
+//         },
+//     });
+//     return paymentIntent;
+// }
+
+// // Function to transfer funds from platform to recipient's connected account
+// async function createTransfer(amount, currency, recipientAccountId) {
+//     const transfer = await stripe.transfers.create({
+//         amount: amount,
+//         currency: currency,
+//         destination: recipientAccountId,
+//     });
+//     return transfer;
+// }
+
+// // Example usage
+// (async () => {
+//     const senderEmail = 'official.carefusion@gmail.com';
+//     const recipientEmail = 'recipient@example.com';
+
+//     // Create connected accounts
+//     const senderAccountId = await createConnectedAccount(senderEmail);
+//     const recipientAccountId = await createConnectedAccount(recipientEmail);
+
+//     console.log('Sender Account ID:', senderAccountId);
+//     console.log('Recipient Account ID:', recipientAccountId);
+
+//     // Simulate a payment made to the sender's account
+//     const paymentIntent = await createPaymentIntent(5000*100, 'pkr', 'pm_card_visa', senderAccountId);
+
+//     console.log('Payment Intent:', paymentIntent);
+
+//     // Now transfer funds from the platform's balance to the recipient's account
+//     const transfer = await createTransfer(5000*100, 'usd', recipientAccountId);
+
+//     console.log('Transfer:', transfer);
+// })();
+
+
+// strip code end
 // adding port and database connection
 const start = async () =>{
     try{

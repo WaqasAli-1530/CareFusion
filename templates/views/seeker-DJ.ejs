@@ -85,8 +85,13 @@
 
             <div class="apply-box">
                 <div style="display: inline-block; background-color: red; border: 2px solid red; border-radius: 5px; padding: 5px;">
-                    <p style="color: white; margin: 0;"><%= job[x]["status"] %></p>
+                    <p style="color: white; margin: 0;"><b><%= job[x]["status"] %></b></p>
                 </div>
+                <% if (job[x]["status"] == "Complete") { %>
+                <div style="margin-left: 73.5%; display: inline-block; background-color: blue; border: 2px solid blue; border-radius: 5px; padding: 5px;">
+                    <p style="color: white; margin: 0;"><b>Payment: <%= job[x]["payment"] %></b></p>
+                </div>
+                <% } %>
                       <div class="form-container">
 	      <div class="formm-control">
                             <h4><b>Service Needed: </b> <%= job[x]["skill"] %></h4>
@@ -141,7 +146,8 @@
                             <a href="/seeker/seekerDJR?assignProv=<%= job[x]["assignProv"] %>&skill=<%= job[x]["skill"] %>&id=<%= job[x]["_id"] %>&status=In Progress" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">See Profile</a>
                                     </div>
                         <% } %>
-                        <% if (job[x]["status"] != "In Progress") { %>
+                        <% if (job[x]["status"] == "Unassigned" || job[x]["status"] == "Unapproved  ") { %>
+                          
                         <div class="formm-control">
                             <a href="/seeker/seekerDJD?job=<%= job[x]["_id"] %>" class="btn btn-danger border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-left: 250px;">Delete</a>
                                     </div>
