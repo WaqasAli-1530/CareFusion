@@ -4,7 +4,8 @@ const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 const service = require("../routers/services");
 const complain_ = require("../model/complain");
-
+const adminn = require("../model/admin");
+const job = require("../model/JobPost");
 const signupAction = async (req, res) => {
   const { name, uname, emailId, pass, service } = req.body;
 
@@ -38,26 +39,43 @@ const loginAction = async (req, res) => {
   const { username, password } = req.body;
 
   const user = await signup.find(req.body).limit(1);
+  const admn = await adminn.findOne(req.body);
+  console.log(req.body)
+
   // console.log(user)
+  let alreadyProv= false;
   if (user.length != 0) {
+    if(!user[0].blocked) {
     req.session.user = user[0].fullname;
     req.session.email = user[0].email;
     req.session.signUpAs = user[0].signedUpAs;
-
     const profile = await provProfile.findOne({ email: user[0].email });
     let profileImage = "";
-
+    
     if (profile) {
-      
       let profileImage = profile.profilePicture;
-      console.log(profileImage)
       req.session.image = profileImage;
+      alreadyProv = true;
+    }
+    else{
+      alreadyProv = false;
     }
     // console.log(req.session.user, "  ", req.session.email);
     res.render("home", {
       user: req.session.signUpAs,
       profileImage: profileImage,
+      alreadyProv: alreadyProv
     });
+  }
+  else{
+    res.render("block");
+  }
+  } else if (admn && admn.length != 0) {
+        req.session.user = "Admin";
+        const totalProv = await provProfile.find();
+        const active = await job.find({status: "In Progress"});
+        const comp = await job.find({status: "Complete"});
+        res.render("admin", {noOfProv: totalProv.length, activeReq: active.length, completed: comp.length});
   } else {
     var message = "Invalid uername or password";
     const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -197,7 +215,14 @@ const forgetPassword = async (req, res) => {
   res.render("forget-password", { message });
 };
 const chatView = async (req,res)=>{
-  res.render("chat",{uname: req.session.user});
+  const { seekerID, providerID } = req.query;
+  const user = await signup.findOne({ fullname: req.session.user });
+  if(user.signedUpAs === 'Service Seeker') {
+    res.render('chat', { seekerID:user._id, providerID,uname: req.session.user });
+  }else {
+    res.render('chat', { seekerID: providerID, providerID: seekerID,uname: req.session.user });
+  }
+  
 }
 const complain = async (req,res)=>{
   if (req.session.user === undefined || req.session.user === "Visitor") {
@@ -230,6 +255,64 @@ const insurance = async (req,res)=>{
   res.render("insurance");
 }
 // New Code
+// admin 
+const admin = async (req, res)=>{
+  const totalProv = await provProfile.find();
+  const active = await job.find({status: "In Progress"});
+  const comp = await job.find({status: "Completed"});
+  res.render("admin", {noOfProv: totalProv.length, activeReq: active.length, completed: comp.length});
+}
+const notification = async (req, res)=>{
+  res.render("notifications");
+}
+const serviceReq = async (req, res)=>{
+  const jobReq = await job.find(); 
+  res.render("service-requests", {jobs: jobReq});
+}
+
+const rejAction = async (req,res)=>{
+  const jobId = req.params.id;
+    try {
+        // Find the job by ID
+        const jobb = await job.findById(jobId);
+        if (!jobb) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+        console.log(jobb);
+        // Delete the job from the database
+        await jobb.remove();
+        consoe.log("Bye");
+        // Respond with success message
+        res.status(200).json({ message: 'Job rejected successfully' });
+    } catch (err) {
+        console.error('Error rejecting job:', err);
+        res.status(500).json({ message: 'Failed to reject job' });
+    }
+}
+const settings = async (req, res)=>{
+  res.render ("settings");
+}
+const status = async (req, res)=>{
+  const allprov = await provProfile.find();
+  res.render("status", {name: req.session.name, profiles: allprov});
+}
+
+const statusAction = async(req, res)=>{
+  try {
+    const profile = await provProfile.findById(req.params.id);
+    console.log(profile);
+
+    if (!profile) {
+        return res.status(404).json({ message: 'Profile not found' });
+    }
+    profile.blocked = !profile.blocked; // Toggle blocked status
+    await profile.save();
+    res.json({ message: 'Profile status updated' });
+} catch (err) {
+    res.status(500).json({ message: err.message });
+}
+}
+
 
 module.exports = {
   signupAction,
@@ -245,5 +328,5 @@ module.exports = {
   complain,
   security,
   insurance,
-  complaiaction
+  complaiaction, admin, notification, serviceReq, status,settings, statusAction, rejAction 
 };

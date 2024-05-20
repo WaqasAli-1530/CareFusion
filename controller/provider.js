@@ -93,6 +93,7 @@ const jobView = async (req, res) => {
     const profile = await provProfile
       .find({ email: req.session.email })
       .limit(1);
+      const provider = await provProfile.findOne({ email: req.session.email })
     if (profile.length != 0) {
       const skil = "skills";
       const skill = profile[0][skil];
@@ -100,21 +101,51 @@ const jobView = async (req, res) => {
         skill: { $in: skill },
         status: "Unassigned",
       });
-      res.render("jobView", { job: jobs });
+    
+      const providerId = await signup.findOne({fullname: req.session.user})
+      const seekerId = await signup.findOne({fullname: jobs[0].fullname})
+      console.log("seeekekeke" , seekerId);
+      console.log("Id", seekerId._id);
+      res.render("jobView", { job: jobs,seekerID: seekerId._id, providerID: providerId._id });
     } else {
       const jobs = [];
-      res.render("jobView", { job: jobs });
+      res.render("jobView", { jobs: jobs });
     }
   } catch (err) {
     console.log(err);
-  }
+  }
 };
 
 const providerProfile = (req, res) => {
   res.render("provProfile");
 };
-const dashboard = (req, res) => {
-  res.render("prov-dashboard");
+const dashboard = async (req, res) => {
+  const user = await provProfile.findOne({email: req.session.email});
+  const id = user["_id"];
+  const comp = await jobpost.find({
+    assignProv: id,
+    status: "Complete",
+    payment: "Complete"
+  });
+  const cmp = comp.length;
+  var cmpPrive = 0;
+  for(let i = 0; i < comp.length; i++)
+    {
+      cmpPrive += comp[i]["price"]
+    }
+  const pend = await jobpost.find({
+    assignProv: id,
+    status: "Complete",
+    payment: "Pending"
+  });
+  const pendS = pend.length;
+  var pendPrice = 0;
+  for(let i = 0; i < pend.length; i++)
+    {
+      pendPrice += pend[i]["price"]
+    }
+
+  res.render("prov-dashboard",{rec: cmpPrive,comp: cmp, pend: pendPrice,pendS: pendS});
 };
 const profile = async (req, res) => {
   res.render("profile", {

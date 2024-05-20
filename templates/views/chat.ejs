@@ -1,47 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name ="vireport" content="width=device-width, intial-scale=1.0">
-    <title> Chat Us </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Us</title>
     <link rel="stylesheet" href="/css/chat.css">
-
 </head>
-
 <body>
-    <section class = "chat-section">
-    <div class = "brand">
-        <img height="40" src="/images/chat.jpeg" alt="">
-        <h1>ChatFusion</h1>
-    </div>
-    <text id ="name" nme = <%uname%>>
-        </text>
-    <div class="message-area">
-    </div>
-    <div>
-        <textarea id="textarea" cols="30" rows = "1" placeholder="Write a message..."></textarea>
-    </div>
-</section>
+    <section class="chat-section">
+        <div class="brand">
+            <img height="40" src="/images/chat.jpeg" alt="">
+            <h1>ChatFusion</h1>
+        </div>
+        <text id="name" nme="<%= uname %>"></text>
+        <div class="message-area"></div>
+        <div>
+            <textarea id="textarea" cols="30" rows="1" placeholder="Write a message..."></textarea>
+        </div>
+    </section>
     
-    <script src = "/socket.io/socket.io.js"></script>
-    <script src="/scripts/chat.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        let nme = '<%=uname%>';
+        // Ensuring variables are assigned before loading the script
+        let nme = '<%= uname %>';
+        let senderId = '<%= seekerID %>';
+        let receiverId = '<%= providerID %>';
+
         if (!nme || nme.trim() === '') {
-        nme = "Anonymous";
-}
+            nme = "Anonymous";
+        }
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          setTimeout(function() {
-            document.getElementById('loader-wrapper').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
-          }, 1000); // Adjust the timeout duration as needed
-        });
-      </script>
+    <script src="/scripts/chat.js"></script>
 </body>
-
 </html>
-
-

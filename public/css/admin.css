@@ -1,0 +1,55 @@
+*{
+    font-family: 'Ubuntu', sans-serif;
+}
+h2{
+    color: #111618;
+}
+
+.bg{
+    background-color: #001529;
+}
+a:hover{
+    background-color: #8993f0;
+}
+
+.col-md-10 {
+    padding: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    height: 150px;
+}
+
+.card:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-title {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 28px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0;
+}
+
+
+/*Media Queries */
+@media (min-width: 992px) { /* lg and above */
+    #sidebar {
+        height: 100vh;
+    }
+}

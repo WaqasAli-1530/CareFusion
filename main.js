@@ -8,7 +8,7 @@ const connDB = require("./config/connDB")
 const port = process.env.PORT || 3000;
 const http = require("http").createServer(app)
 const io = require("socket.io")(http);
-
+const chatMessage = require("./model/chatMessage")
 // Code for automatically chnage status to complete
 const cron = require('node-cron');
 const JobPost = require('./model/JobPost');
@@ -89,80 +89,74 @@ app.use('/services', require('./routers/services'))
 app.get("/*",(req,res)=>{
     res.status(404).render("404");
 })
+
   // Socket
 
-io.on("connection", (socket) =>{
-    console.log ("Connected......")
-    socket.on ("message", (msg)=>{
-        //console.log(msg);
-        socket.broadcast.emit('message', msg);
-    })
-})
+  io.on("connection", (socket) => {
+    console.log("Connected......");
+
+    socket.on('joinRoom', async ({ seekerID, providerID }) => {
+        socket.join(seekerID);
+        socket.join(providerID);
+
+        // Load previous chat messages
+        let chat = await chatMessage.findOne({
+            $or: [
+                { senderId: seekerID, receiverId: providerID },
+                { senderId: providerID, receiverId: seekerID }
+            ]
+        });
+
+        if (chat) {
+            socket.emit('chatHistory', chat.msgs);
+        } else {
+            socket.emit('chatHistory', []);
+        }
+    });
+
+    socket.on('message', async (msg) => {
+        try {
+            // create a chat based on sender and receiver
+            console.log('Received message:', msg); 
+            let chat = await chatMessage.findOne({
+                $or: [
+                    { senderId: msg.sender, receiverId: msg.receiver },
+                    { senderId: msg.receiver, receiverId: msg.sender }
+                ]
+            });
+
+            if (!chat) {
+                // Create  new chat if it doesn't exist
+                chat = new chatMessage({
+                    senderId: msg.sender,
+                    receiverId: msg.receiver,
+                    msgs: [] // Initialize empty msgs array
+                });
+            }
+
+            const newMessage = {
+                sender: msg.sender,
+                content: msg.message,
+                timestamp: new Date()
+            };
+            console.log('New message:', newMessage);
+
+            // push the new message to the msgs array in the chat
+            chat.msgs.push(newMessage);
+
+            await chat.save();
+
+            // Emit the message to both sender and receiver
+            socket.to(msg.sender).to(msg.receiver).emit('message', newMessage);
+        } catch (error) {
+            console.error("Error in saving message ", error);
+        }
+    });
+});
 
 
  
-// // strip code sender
 
-// const stripe = require('stripe')(process.env.STRIP_PRIVATE_KEY); // Replace with your test secret key
-
-// // Function to create connected account
-// async function createConnectedAccount(email) {
-//     const account = await stripe.accounts.create({
-//         type: 'standard',
-//         email: email,
-//     });
-//     return account.id;
-// }
-
-// // Function to create a payment intent and transfer funds to connected account
-// async function createPaymentIntent(amount, currency, paymentMethodId, connectedAccountId) {
-//     const paymentIntent = await stripe.paymentIntents.create({
-//         amount: amount,
-//         currency: currency,
-//         payment_method: paymentMethodId,
-//         // confirm: true,
-//         transfer_data: {
-//             destination: connectedAccountId,
-//         },
-//     });
-//     return paymentIntent;
-// }
-
-// // Function to transfer funds from platform to recipient's connected account
-// async function createTransfer(amount, currency, recipientAccountId) {
-//     const transfer = await stripe.transfers.create({
-//         amount: amount,
-//         currency: currency,
-//         destination: recipientAccountId,
-//     });
-//     return transfer;
-// }
-
-// // Example usage
-// (async () => {
-//     const senderEmail = 'official.carefusion@gmail.com';
-//     const recipientEmail = 'recipient@example.com';
-
-//     // Create connected accounts
-//     const senderAccountId = await createConnectedAccount(senderEmail);
-//     const recipientAccountId = await createConnectedAccount(recipientEmail);
-
-//     console.log('Sender Account ID:', senderAccountId);
-//     console.log('Recipient Account ID:', recipientAccountId);
-
-//     // Simulate a payment made to the sender's account
-//     const paymentIntent = await createPaymentIntent(5000*100, 'pkr', 'pm_card_visa', senderAccountId);
-
-//     console.log('Payment Intent:', paymentIntent);
-
-//     // Now transfer funds from the platform's balance to the recipient's account
-//     const transfer = await createTransfer(5000*100, 'usd', recipientAccountId);
-
-//     console.log('Transfer:', transfer);
-// })();
-
-
-// strip code end
 // adding port and database connection
 const start = async () =>{
     try{

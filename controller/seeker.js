@@ -424,18 +424,22 @@ const seekerDJR = async (req, res) => {
               data.push({
                 comp: cmp,
                 prog: prg,
-                id: reply[i]
+                id: reply[i],
+                
               })
             }
             console.log(data)
           const providers = await provider.find({ _id: { $in: reply } });
+          const provId = await signup.findOne({fullname: providers[0].fullname});
           res.render("seeker-DJR", {
             providers: providers,
             skill: req.query.skill,
             id: req.query.id,
             status: req.query.status,
             bid: _reply,
-            data: data
+            data: data,
+            seekerID: user._id,
+            provID: provId._id
           });
         } else {
           res.redirect("/seeker/dashboard");
@@ -456,13 +460,16 @@ const seekerDJR = async (req, res) => {
           prog: prg,
           id: req.query.assignProv
         })
+        const provId = await signup.findOne({fullname: pr[0].fullname});
         res.render("seeker-DJR", {
           providers: pr,
           skill: req.query.skill,
           id: req.query.id,
           status: req.query.status,
           data: data,
-          bid: [{price: pri,id: req.query.assignProv}]
+          bid: [{price: pri,id: req.query.assignProv}],
+          seekerID: user._id,
+                provID: provId._id
 
         });
       }

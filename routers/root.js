@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {signupAction,insurance,complaiaction,loginAction,security,chatView,complain,forgotAction,login,signUp, forgetPassword,  signOut,OTP,resetPassword} = require("../controller/root")
+const {signupAction,insurance,complaiaction,loginAction,security,chatView,complain,forgotAction,login,signUp, 
+    forgetPassword,  signOut,OTP,resetPassword, admin, notification, serviceReq, status,settings, statusAction, rejAction } = require("../controller/root")
 
 
 
@@ -84,7 +85,13 @@ router.route('/payment').post((req, res) => {
     });
 })
 
-
+router.route("/admin").get(admin);
+router.route("/notifications").get(notification);
+router.route("/settings").get(settings);
+router.route("/serviceReq").get(serviceReq);
+router.route("/status").get(status);
+router.route("/profiles/:id/block").post(statusAction);
+router.route("/jobs/:id/reject").delete(rejAction);
 // strip code receiver end
 
 module.exports = router;
