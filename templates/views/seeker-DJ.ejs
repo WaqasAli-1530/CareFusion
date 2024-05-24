@@ -87,8 +87,8 @@
                 <div style="display: inline-block; background-color: red; border: 2px solid red; border-radius: 5px; padding: 5px;">
                     <p style="color: white; margin: 0;"><b><%= job[x]["status"] %></b></p>
                 </div>
-                <% if (job[x]["status"] == "Complete") { %>
-                <div style="margin-left: 73.5%; display: inline-block; background-color: blue; border: 2px solid blue; border-radius: 5px; padding: 5px;">
+                <% if (job[x]["status"] == "Complete" || job[x]["status"] == "In Progress") { %>
+                <div style="margin-left: 71.5%; display: inline-block; background-color: blue; border: 2px solid blue; border-radius: 5px; padding: 5px;">
                     <p style="color: white; margin: 0;"><b>Payment: <%= job[x]["payment"] %></b></p>
                 </div>
                 <% } %>
@@ -146,12 +146,35 @@
                             <a href="/seeker/seekerDJR?assignProv=<%= job[x]["assignProv"] %>&skill=<%= job[x]["skill"] %>&id=<%= job[x]["_id"] %>&status=In Progress" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">See Profile</a>
                                     </div>
                         <% } %>
-                        <% if (job[x]["status"] == "Unassigned" || job[x]["status"] == "Unapproved  ") { %>
+                        <% if (job[x]["status"] == "Unassigned" || job[x]["status"] == "Unapproved") { %>
                           
                         <div class="formm-control">
                             <a href="/seeker/seekerDJD?job=<%= job[x]["_id"] %>" class="btn btn-danger border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-left: 250px;">Delete</a>
                                     </div>
                                     <% } %>
+                                    <div class="formm-control">
+                                    <% if (job[x]["payment"] == "Pending") { %>
+                                      
+                                    <form action="/seeker/payment?price=<%= job[x]["price"] %>*100&id=<%= job[x]["_id"] %>" method="POST">
+                                      <script
+                                        src="//checkout.stripe.com/v2/checkout.js"
+                                        class="stripe-button"
+                                        data-key="<%= key %>"
+                                        data-amount="<%= job[x]['price'] %>*100"
+                                        data-currency="pkr"
+                                        data-name="<%= job[x]['skill'] %>"
+                                        data-description="Congrats on completing Service"
+                                        data-locale="auto" >
+                                        </script>
+                                      </form>
+                                          
+                                <% }%>
+                              </div>
+                              <% if (job[x]["status"] == "In Progress") { %>
+                                <div class="formm-control">
+                                  <a href="/seeker/seekerDJN?id=<%= job[x]["_id"] %>" class="btn btn-success border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">Complete Now</a>
+                              </div>
+                              <% }%>
                     </div>
                     
                     </div>

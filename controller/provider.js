@@ -93,7 +93,7 @@ const jobView = async (req, res) => {
     const profile = await provProfile
       .find({ email: req.session.email })
       .limit(1);
-      const provider = await provProfile.findOne({ email: req.session.email })
+    const provider = await provProfile.findOne({ email: req.session.email });
     if (profile.length != 0) {
       const skil = "skills";
       const skill = profile[0][skil];
@@ -101,51 +101,58 @@ const jobView = async (req, res) => {
         skill: { $in: skill },
         status: "Unassigned",
       });
-    
-      const providerId = await signup.findOne({fullname: req.session.user})
-      const seekerId = await signup.findOne({fullname: jobs[0].fullname})
-      console.log("seeekekeke" , seekerId);
+
+      const providerId = await signup.findOne({ fullname: req.session.user });
+      const seekerId = await signup.findOne({ fullname: jobs[0].fullname });
+      console.log("seeekekeke", seekerId);
       console.log("Id", seekerId._id);
-      res.render("jobView", { job: jobs,seekerID: seekerId._id, providerID: providerId._id });
+      res.render("jobView", {
+        job: jobs,
+        seekerID: seekerId._id,
+        providerID: providerId._id,
+      });
     } else {
       const jobs = [];
       res.render("jobView", { jobs: jobs });
     }
   } catch (err) {
     console.log(err);
-  }
+  }
 };
 
 const providerProfile = (req, res) => {
   res.render("provProfile");
 };
 const dashboard = async (req, res) => {
-  const user = await provProfile.findOne({email: req.session.email});
+  const user = await provProfile.findOne({ email: req.session.email });
   const id = user["_id"];
   const comp = await jobpost.find({
     assignProv: id,
     status: "Complete",
-    payment: "Complete"
+    payment: "Complete",
   });
   const cmp = comp.length;
   var cmpPrive = 0;
-  for(let i = 0; i < comp.length; i++)
-    {
-      cmpPrive += comp[i]["price"]
-    }
+  for (let i = 0; i < comp.length; i++) {
+    cmpPrive += comp[i]["price"] - Math.floor(comp[i]["price"] * 0.1);
+  }
   const pend = await jobpost.find({
     assignProv: id,
-    status: "Complete",
-    payment: "Pending"
+    status: { $in: ["Complete", "In Progress"] },
+    payment: "Pending",
   });
   const pendS = pend.length;
   var pendPrice = 0;
-  for(let i = 0; i < pend.length; i++)
-    {
-      pendPrice += pend[i]["price"]
-    }
+  for (let i = 0; i < pend.length; i++) {
+    pendPrice += pend[i]["price"] - Math.floor(pend[i]["price"] * 0.1);
+  }
 
-  res.render("prov-dashboard",{rec: cmpPrive,comp: cmp, pend: pendPrice,pendS: pendS});
+  res.render("prov-dashboard", {
+    rec: cmpPrive,
+    comp: cmp,
+    pend: pendPrice,
+    pendS: pendS,
+  });
 };
 const profile = async (req, res) => {
   res.render("profile", {
@@ -160,7 +167,10 @@ const stats = async (req, res) => {
     const prov = await provProfile.find({ email: req.session.email });
     console.log("Provider: " + prov);
     const provID = prov[0]["_id"];
-    const jobs = await jobpost.find({ status: "In Progress", assignProv: provID });
+    const jobs = await jobpost.find({
+      status: "In Progress",
+      assignProv: provID,
+    });
     res.render("statistics", { jobs: jobs });
   }
 };
@@ -190,10 +200,7 @@ const applyjob = async (req, res) => {
         update = { $push: { reply: { id: prov_id } } };
       }
 
-      await jobpost.updateOne(
-        { _id: req.query.id },
-        update
-      );
+      await jobpost.updateOne({ _id: req.query.id }, update);
 
       res.redirect("/");
     } else {
@@ -210,10 +217,13 @@ const assignJobs = async (req, res) => {
   const user = await provProfile.find({ email: req.session.email }).limit(1);
   if (user.length != 0) {
     const prov = await provProfile.find({ email: req.session.email });
-    console.log("Provider: " + prov);
+    // console.log("Provider: " + prov);
     const provID = prov[0]["_id"];
-    const jobs = await jobpost.find({ status: "Unapproved", assignProv: provID });
-    res.render("confirmJob", { jobs: jobs });
+    const jobs = await jobpost.find({
+      status: "Unapproved",
+      assignProv: provID,
+    });
+    res.render("confirmJob", { jobs: jobs,seekerID: user["_id"],providerID: provID });
   } else {
     res.redirect("/provider/viewJob");
   }

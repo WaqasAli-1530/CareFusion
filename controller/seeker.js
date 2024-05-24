@@ -276,7 +276,7 @@ const seekerDJ = async (req, res) => {
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
       const jobs = await JobPost.find({ email: email });
-      res.render("seeker-DJ", { job: jobs });
+      res.render("seeker-DJ", { job: jobs,key:process.env.STRIP_PUBLIC_KEY });
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -319,7 +319,7 @@ const seekerDB = async (req, res) => {
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
       const jobs = await JobPost.find({ email: email, status: "In Progress" });
-      res.render("seeker-DB", { job: jobs });
+      res.render("seeker-DB", { job: jobs ,key:process.env.STRIP_PUBLIC_KEY});
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -563,7 +563,7 @@ const findWorker = (req, res) => {
 };
 
 const postJob = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+ if (req.session.user === undefined || req.session.user === "Visitor") {
     res.render("login", { message: "Please login to post a job" });
   } else {
     const email = req.session.email;
@@ -581,6 +581,7 @@ const postJob = async (req, res) => {
 const jobAssign = async (req, res) => {
   if (req.session.user === undefined || req.session.user === "Visitor") {
     res.render("login", { message: "Please login to post a job" });
+
   } else {
     const email = req.session.email;
     const user = await signup.find({ email: email }).limit(1);
@@ -629,7 +630,7 @@ const seekerDSL = async (req, res) => {
                 id: provid[i]["_id"]
               })
             }
-        res.render("seeker-DSL", { providers: provid, xv: x,data:data });
+        res.render("seeker-DSL", { providers: provid, xv: x,data:data,seekerID: user["_id"]});
       } else {
         res.render("seeker-DSL", { providers: [], xv: "" });
       }
@@ -724,6 +725,27 @@ const deleteShortlistedAssign = async (req, res) => {
   }
 };
 
+const seekerDJN = async (req, res) => {
+  if (req.session.user === undefined || req.session.user === "Visitor") {
+    res.render("login", { message: "Please login to post a job" });
+  } else {
+    const email = req.session.email;
+    const user = await signup.find({ email: email }).limit(1);
+    const signedUpAs = user[0]["signedUpAs"];
+    if (signedUpAs === "Service Seeker") {
+      await JobPost.updateOne(
+        { _id: req.query.id },
+        { $set: { status: "Complete" } }
+      );
+      res.redirect("/seeker/dashboard");
+    } else {
+      var message = "Login as service seeker not service provider";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
+    }
+  }
+};
+
 module.exports = {
   getCategory,
   shortlist,
@@ -748,5 +770,6 @@ module.exports = {
   jobAssign,
   jobAssignAction,
   deleteShortlistedAssign,
-  payment
+  payment,
+  seekerDJN
 };
