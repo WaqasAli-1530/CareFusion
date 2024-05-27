@@ -50,6 +50,14 @@ const provProfileSchema =new schema({
     jobs:{
         type:[String],
         default:[]
+    },
+    rating:{
+        type:[Number],
+        default: []
+    },
+    blocked:{
+        type: String,
+        default : false
     }
 });
 

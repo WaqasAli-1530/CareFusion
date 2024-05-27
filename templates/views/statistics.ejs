@@ -170,6 +170,11 @@
     <div class="formm-control">
                     <p><b>Description about Service:</b> <%= jobs[x]["detail"] %></p>
                 </div>
+                <% if (jobs[x]["status"] == "In Progress") { %>
+                    <div style="margin-right: 240px;display: inline-block; background-color: blue; border: 2px solid blue; border-radius: 5px; padding: 5px;">
+                        <p style="color: white; margin: 0;"><b>Payment: <%= jobs[x]["payment"] %></b></p>
+                    </div>
+                    <% } %>
                     
             </div>
         </div>

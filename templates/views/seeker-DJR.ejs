@@ -14,6 +14,13 @@
      <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
      <link href="/css/seeker-DJR.css" rel="stylesheet" >
      <style>
+      .star {
+            color: gold;
+            font-size: 24px;
+        }
+        .star.gray {
+            color: lightgray;
+        }
       #loader-wrapper {
             position: fixed;
             top: 0;
@@ -109,6 +116,29 @@
       </div>
     </div>
     <div class="details-row">
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Phone No</h4>
+        <p><%= providers[x]["phoneno"] %></p>
+      </div>
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">DOB</h4>
+        <p><%= providers[x]["dob"].toISOString().split('T')[0] %></p>
+      </div>
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Rating</h4>
+        <div class="rating">
+          <% var arr =  providers[x]["rating"]; var rat = 0; for(let g = 0 ; g < arr.length;g++){ rat += arr[g] } rat = rat/arr.length; rat = Math.ceil(rat)%>
+          <% for(let i = 1; i <= 5; i++) { %>
+              <% if (i <= rat) { %>
+                  <span class="star">&#9733;</span>
+              <% } else { %>
+                  <span class="star gray">&#9733;</span>
+              <% } %>
+          <% } %>
+      </div>
+      </div>
+    </div>
+    <div class="details-row">
       <% for(let k = 0 ; k < data.length; k++){ %>
           <% if(data[k].id == providers[x]["_id"]){ %>
           <div class="detail">
@@ -154,13 +184,10 @@
           <a href="/seeker/seekerDJRA?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>&price=<%= bid[k].price %>"><button class="apply-btn"><b>Approve</b></button></a>
           <% } else { %>
             <a href="/seeker/seekerDJRA?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>"><button class="apply-btn"><b>Approve</b></button></a>
-      <% } }}%>
+            <a href="/chat?seekerID=<%= seekerID %>&providerID=<%= provID %>">
+              <button style="background-color: aliceblue; border: white;"><img src="/images/cmt.svg" width="40"></button></a>
+            <% } }}%>
         
-      </div>
-        <div style = "margin-top: 15px;" class="detail">
-          <a href="/chat?seekerID=<%= seekerID %>&providerID=<%= provID %>">
-            <button class="apply-btn"><img src="/images/cmt.svg" width="40"></button>
-        </a>
             </div>
       <div class="detail">
         <a href="/seeker/seekerDJRI?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>"><button style="background: red;" class="apply-btn"><b>Ignore</b></button></a>

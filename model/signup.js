@@ -35,6 +35,10 @@ const signupSchema = new schema({
         type: String,
         default:""
     },
+    rating:{
+        type:[Number],
+        default: []
+    },
 })
 
 module.exports = mongoose.model('signup',signupSchema);

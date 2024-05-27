@@ -113,7 +113,7 @@ const jobView = async (req, res) => {
       });
     } else {
       const jobs = [];
-      res.render("jobView", { jobs: jobs });
+      res.render("jobView", { job: jobs });
     }
   } catch (err) {
     console.log(err);
@@ -204,7 +204,9 @@ const applyjob = async (req, res) => {
 
       res.redirect("/");
     } else {
-      res.redirect("/provider/viewJob");
+      var message = "Login to continue further";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
     }
   } catch (error) {
     console.error(error);
@@ -225,7 +227,9 @@ const assignJobs = async (req, res) => {
     });
     res.render("confirmJob", { jobs: jobs,seekerID: user["_id"],providerID: provID });
   } else {
-    res.redirect("/provider/viewJob");
+    var message = "Login to continue further";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
   }
 };
 const confirm_job = async (req, res) => {
@@ -235,7 +239,9 @@ const confirm_job = async (req, res) => {
     await jobpost.updateOne({ _id: id }, { status: "In Progress" });
     res.redirect("/provider/dashboard");
   } else {
-    res.redirect("/provider/dashboard");
+    var message = "Login to continue further";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
   }
 };
 const reject_job = async (req, res) => {
@@ -245,7 +251,35 @@ const reject_job = async (req, res) => {
     await jobpost.updateOne({ _id: id }, { status: "Rejected" });
     res.redirect("/provider/dashboard");
   } else {
+    var message = "Login to continue further";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
+  }
+};
+const rating = async (req, res) => {
+  const user = await provProfile.find({ email: req.session.email }).limit(1);
+  if (user.length != 0) {
+    await jobpost.updateOne({ _id: req.query.job }, { seekRat: "true" });
+    await signup.updateOne({ email: req.query.seeker }, { $push: { rating: req.query.value } });
     res.redirect("/provider/dashboard");
+  } else {
+    var message = "Login to continue further";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
+  }
+};
+const seekerProf = async (req, res) => {
+  const user = await provProfile.find({ email: req.session.email }).limit(1);
+  if (user.length != 0) {
+    const seeker = await signup.findOne({email:req.query.email});
+    const comp = await jobpost.find({email:req.query.email,status:"Complete"});
+    const inprog = await jobpost.find({email:req.query.email,status:"In Progress"});
+    console.log(seeker)
+    res.render("seekerProf",{seeker:seeker,comp:comp.length,inprog:inprog.length});
+  } else {
+    var message = "Login to continue further";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
   }
 };
 
@@ -262,4 +296,6 @@ module.exports = {
   applyjob,
   confirm_job,
   reject_job,
+  rating,
+  seekerProf
 };

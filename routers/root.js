@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {signupAction,insurance,complaiaction,loginAction,security,chatView,complain,forgotAction,login,signUp, 
-    forgetPassword,  signOut,OTP,resetPassword, admin, notification, serviceReq, status,settings, statusAction, rejAction } = require("../controller/root")
+    forgetPassword,  signOut,OTP,resetPassword, admin, notification, serviceReq, status,settings, statusAction, 
+    rejAction, complains, payment } = require("../controller/root")
 
 
 
@@ -40,6 +41,7 @@ router.route("/complain").get(complain);
 router.route("/security").get(security);
 router.route("/insurance").get(insurance);
 router.route("/complaiaction").post(complaiaction);
+
 
 // strip code receiver
 
@@ -92,6 +94,12 @@ router.route("/serviceReq").get(serviceReq);
 router.route("/status").get(status);
 router.route("/profiles/:id/block").post(statusAction);
 router.route("/jobs/:id/reject").delete(rejAction);
-// strip code receiver end
+router.route("/admin-comp").get(complains);
+router.route("/payment").get(payment);
+router.route("/submit-rating").get( (req, res) => {
+    const rating = req.body.rating;
+    console.log('Received rating:', rating);
+    res.json({ message: 'Rating received successfully' });
+  });
 
 module.exports = router;

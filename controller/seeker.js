@@ -243,7 +243,7 @@ const dashboard = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      res.render("seeker-dashboard");
+      res.render("seeker-dashboard",{err: ""});
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -380,10 +380,23 @@ const payment = async (req, res) => {
         });
     })
     .then(async (charge) => {
-      await JobPost.updateOne(
-        { _id: req.query.id },
-        { $set: { payment: "Complete"} }
-      ); 
+      const job = await JobPost.findOne({_id:req.query.id})
+      const status = job["status"];
+      if(status == "In Progress")
+        {
+          await JobPost.updateOne(
+            { _id: req.query.id },
+            { $set: { payment: "Admin"} })
+        }
+      if(status == "Complete")
+        {
+          await JobPost.updateOne(
+            { _id: req.query.id },
+            { $set: { payment: "Complete"} })
+        }
+
+      
+       
         res.redirect("/seeker/dashboard")  // If no error occurs
     })
     .catch((err) => {
@@ -421,12 +434,22 @@ const seekerDJR = async (req, res) => {
               var cmp = cmp.length;
               var prg = await JobPost.find({ assignProv: reply[i], status: "In Progress" });
               var prg = prg.length;
+              var fl = false;
+              for(let j = 0; j < data.length; j++)
+                {
+                  if(data[j].id == reply[i])
+                    {
+                      fl = true;
+                      break;
+                    }
+                }
+                if(fl==false){
               data.push({
                 comp: cmp,
                 prog: prg,
                 id: reply[i],
                 
-              })
+              })}
             }
             console.log(data)
           const providers = await provider.find({ _id: { $in: reply } });
@@ -466,6 +489,7 @@ const seekerDJR = async (req, res) => {
           skill: req.query.skill,
           id: req.query.id,
           status: req.query.status,
+          user: req.session.user,
           data: data,
           bid: [{price: pri,id: req.query.assignProv}],
           seekerID: user._id,
@@ -508,7 +532,7 @@ const seekerDJRA = async (req, res) => {
             { $set: { price: price } }
           );
         }
-      res.render("seeker-dashboard");
+      res.render("seeker-dashboard",{err:""});
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -529,7 +553,7 @@ const seekerDJRI = async (req, res) => {
         { $pull: { reply: req.query.provID } }
       );
       console.log(req.query.skill);
-      res.render("seeker-dashboard");
+      res.render("seeker-dashboard",{err:""});
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -733,11 +757,50 @@ const seekerDJN = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      await JobPost.updateOne(
-        { _id: req.query.id },
-        { $set: { status: "Complete" } }
-      );
+      const j = await JobPost.findOne({_id:req.query.id})
+      const pay = j["payment"];
+      if(pay == "Admin")
+        {
+          await JobPost.updateOne(
+            { _id: req.query.id },
+            { $set: { status: "Complete" } }
+            
+          );
+          const x = await JobPost.findOne({_id:req.query.id})
+          if(x["payment"] == "Admin")
+            {
+              await JobPost.updateOne(
+                { _id: req.query.id },
+                { $set: { payment: "Complete"} });
+            }
+          res.redirect("/seeker/dashboard");
+        }
+        else
+        {
+          res.render("seeker-dashboard",{err:"Please pay first to complete Job"})
+        }
+      
+    } else {
+      var message = "Login as service seeker not service provider";
+      const redirectUrl = "/login?message=" + encodeURIComponent(message);
+      res.redirect(redirectUrl);
+    }
+  }
+};
+const rating = async (req, res) => {
+  if (req.session.user === undefined || req.session.user === "Visitor") {
+    res.render("login", { message: "Please login to post a job" });
+  } else {
+    const email = req.session.email;
+    const user = await signup.find({ email: email }).limit(1);
+    const signedUpAs = user[0]["signedUpAs"];
+    if (signedUpAs === "Service Seeker") {
+      console.log(req.query);
+      await provider.updateOne({_id: req.query.prov},{  $push: { rating: req.query.value } })
+      await JobPost.updateMany({_id: req.query.job},{$set:{rating: req.query.value}})
+      console.log("In rating")
       res.redirect("/seeker/dashboard");
+      
     } else {
       var message = "Login as service seeker not service provider";
       const redirectUrl = "/login?message=" + encodeURIComponent(message);
@@ -771,5 +834,6 @@ module.exports = {
   jobAssignAction,
   deleteShortlistedAssign,
   payment,
-  seekerDJN
+  seekerDJN,
+  rating
 };

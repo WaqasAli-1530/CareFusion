@@ -57,6 +57,16 @@
                             </a>
                         </li>
                         <li class="nav-item mt-lg-3">
+                            <a class="nav-link text-white" href="/payment">
+                                Payment
+                            </a>
+                        </li>
+                        <li class="nav-item mt-lg-3">
+                            <a class="nav-link text-white" href="/admin-comp">
+                                Complaints
+                            </a>
+                        </li>
+                        <li class="nav-item mt-lg-3">
                             <a class="nav-link text-white" href="/notifications">
                                 Notifications
                             </a>
@@ -89,7 +99,7 @@
                                         <th>Job Type</th>
                                         <th>Status</th>
                                         <th>Date</th>
-                                        <th>Actions</th>
+                                        
                                     </tr>
                                 </thead>
                                 <% jobs.forEach(jobPost => { %>
@@ -97,19 +107,16 @@
                                     <tr>
                                         <% if(jobPost.status != "Completed") { %>
                                         <td><%=jobPost.fullname%></td>
-                                        <td><% if (jobPost.assignProv) { %>
-                                            <%= jobPost.assignProv %>
+                                        <td><% if (prov != "") { %>
+                                            <%= prov.fullname %>
                                         <% } else { %>
                                             Nill
                                         <% } %> </td>
                                         <td><%=jobPost.skill%></td>
                                         <td><%=jobPost.status%></td>
                                         <td><%= new Date(jobPost.date).toLocaleDateString() %></td>
-                                            <% if( jobPost.status == "Unassigned" || jobPost.status == "Unapproved"  ){ %>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm reject-btn" data-id="<%= jobPost._id %>">Reject</button>
-                                        </td>
-                                    <%} } %>
+                                            
+                                    <% } %>
                                     </tr>
                                     
                                 </tbody>

@@ -6,6 +6,7 @@ const service = require("../routers/services");
 const complain_ = require("../model/complain");
 const adminn = require("../model/admin");
 const job = require("../model/JobPost");
+const avail = require("../model/availform");
 const signupAction = async (req, res) => {
   const { name, uname, emailId, pass, service } = req.body;
 
@@ -266,10 +267,40 @@ const notification = async (req, res)=>{
   res.render("notifications");
 }
 const serviceReq = async (req, res)=>{
-  const jobReq = await job.find(); 
-  res.render("service-requests", {jobs: jobReq});
+  const jobReq = await job.find();
+  const prov="";
+  if(jobReq.assignProv){
+    prov = await signup.findOne({assignProv: jobReq.assignProv}); 
+  }
+  console.log(prov);
+  res.render("service-requests", {jobs: jobReq, prov});
 }
 
+const complains = async (req, res)=>{
+  const comp = await complain_.find();
+  res.render("admin-comp", {complaints: comp});
+}
+
+const payment = async (req, res)=>{
+  const pend = await job.find({
+    status: { $in: ["Complete", "In Progress"] },
+    payment: { $in: ["Admin", "Complete"] },
+  });
+  var pendPrice = 0;
+  for (let i = 0; i < pend.length; i++) {
+    pendPrice += pend[i]["price"] - Math.floor(pend[i]["price"] * 0.9);
+  }
+
+  const x = await job.find({
+    status: "In Progress",
+    payment: "Admin",
+  });
+  var xv = 0;
+  for (let i = 0; i < x.length; i++) {
+    xv += x[i]["price"] - Math.floor(x[i]["price"] * 0.1);
+  }
+  res.render("payment",{earn: pendPrice,pend:xv});
+}
 const rejAction = async (req,res)=>{
   const jobId = req.params.id;
     try {
@@ -328,5 +359,6 @@ module.exports = {
   complain,
   security,
   insurance,
-  complaiaction, admin, notification, serviceReq, status,settings, statusAction, rejAction 
+  complaiaction, admin, notification, serviceReq, status,settings, statusAction, rejAction,
+  complains, payment 
 };

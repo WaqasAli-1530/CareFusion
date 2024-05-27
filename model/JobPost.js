@@ -81,6 +81,14 @@ const jobPostSchema =new schema({
     payment:{
         type:String,
         default:""
+    },
+    rating:{
+        type:Number,
+        default:0
+    },
+    seekRat:{
+        type:String,
+        default:"false"
     }
 
     

@@ -150,12 +150,9 @@ app.get("/*",(req,res)=>{
             socket.to(msg.sender).to(msg.receiver).emit('message', newMessage);
         } catch (error) {
             console.error("Error in saving message ", error);
-        }
-    });
+        }
+    });
 });
-
-
- 
 
 // adding port and database connection
 const start = async () =>{

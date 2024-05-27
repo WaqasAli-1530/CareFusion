@@ -60,7 +60,13 @@
               opacity: 1;
             }
           }
-      
+          .star {
+            color: gold;
+            font-size: 24px;
+        }
+        .star.gray {
+            color: lightgray;
+        }
       </style>
       
         </head>
@@ -111,6 +117,27 @@
       <div class="detail">
         <h4 class="fs-5 fw-bold">Home Town</h4>
         <p><%= providers[x]["hometown"] %></p>
+      </div>
+    </div>
+    <div class="details-row">
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Phone No</h4>
+        
+        <p><%= providers[x]["phoneNo"] %></p>
+        
+      </div>
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Rating</h4>
+        <div class="rating">
+          <% var arr =  providers[x]["rating"]; var rat = 0; for(let g = 0 ; g < arr.length;g++){ rat += arr[g] } rat = rat/arr.length; rat = Math.ceil(rat)%>
+          <% for(let i = 1; i <= 5; i++) { %>
+              <% if (i <= rat) { %>
+                  <span class="star">&#9733;</span>
+              <% } else { %>
+                  <span class="star gray">&#9733;</span>
+              <% } %>
+          <% } %>
+      </div>
       </div>
     </div>
     <div class="details">
