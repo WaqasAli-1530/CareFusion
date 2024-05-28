@@ -178,13 +178,25 @@
                                                   <p><b>Description about Service:</b> <%= job[x]["detail"] %></p>
                                               </div>
                                               
-                                                <label for="price">If your not comfortable with Rs.<%= job[x]["price"] %> enter your price</label>
-                                                <input style="margin-right:200px;" type="number" id="price" name="price">
+                                                
                                             
-                                    
-                                        <div class="formm-control">
-                                            <a href="/provider/applyjob?id=<%= job[x]["_id"]%>" id="applyButton" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">Apply</a>
-                                          </div>
+                                                <% var f = "no";%>
+                                                <% for(var s = 0 ; s < job[x]["reply"].length; s++) { %>
+                                                  <%if (job[x]["reply"][s]["id"] == xyz){ f = "yes";}%>
+                                                  <%} if(f == "no"){ %>
+                                                      <label for="price">If your not comfortable with Rs.<%= job[x]["price"] %> enter your price</label>
+                                                <input style="margin-right:200px;" type="number" id="price" name="price">
+                                                      <div class="formm-control">
+                                                        <a href="/provider/applyjob?id=<%= job[x]['_id']%>" id="applyButton" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">Apply</a>
+                                                      </div>
+                                                     <% } else { %>
+                                                      <div class="formm-control">
+                                                        <a href="#" id="applyButton" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2 " style="margin-right: 250px;">Unapproved</a>
+                                                      </div>
+                                                     <%} %>
+                                                        
+                                                      
+                                        
                                           <a href="/chat?providerID=<%= providerID %>&seekerID=<%= seekerID %>">
                                             <button style="background-color: aliceblue; border: white;"><img src="/images/cmt.svg" width="40"></button>
                                         </a>

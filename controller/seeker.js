@@ -422,7 +422,7 @@ const seekerDJR = async (req, res) => {
       if (req.query.status == "Unassigned") {
         const jobs = await JobPost.findOne({ _id:req.query.id });
         const _reply = jobs.reply;
-        if (_reply !== 0) {
+        if (_reply != 0) {                                                      // update..............
           const reply = [];
           for (let i = 0; i < _reply.length; i++) {
             reply.push(_reply[i].id);
@@ -548,11 +548,11 @@ const seekerDJRI = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
+      console.log(req.query);
       await JobPost.updateOne(
         { _id: req.query.jobID },
-        { $pull: { reply: req.query.provID } }
+        { $pull: { reply: {id: req.query.provID }} }                                                          // update..............
       );
-      console.log(req.query.skill);
       res.render("seeker-dashboard",{err:""});
     } else {
       var message = "Login as service seeker not service provider";

@@ -181,16 +181,18 @@
         <% for(let k = 0 ; k < data.length; k++){ %>
         <% if(bid[k].id == providers[x]["_id"]){ %>
         <% if(bid[k].price > 0){ %>
-          <a href="/seeker/seekerDJRA?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>&price=<%= bid[k].price %>"><button class="apply-btn"><b>Approve</b></button></a>
+          <a href="/seeker/seekerDJRA?provID=<%= providers[x]['_id'] %>&jobID=<%= id %>&price=<%= bid[k].price %>"><button class="apply-btn"><b>Approve</b></button></a>
+          <a href="/chat?seekerID=<%= seekerID %>&providerID=<%= provID %>">
+            <button style="background-color: aliceblue; border: white;"><img src="/images/cmt.svg" width="40"></button></a>
           <% } else { %>
-            <a href="/seeker/seekerDJRA?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>"><button class="apply-btn"><b>Approve</b></button></a>
+            <a href="/seeker/seekerDJRA?provID=<%= providers[x]['_id'] %>&jobID=<%= id %>"><button class="apply-btn"><b>Approve</b></button></a>
             <a href="/chat?seekerID=<%= seekerID %>&providerID=<%= provID %>">
               <button style="background-color: aliceblue; border: white;"><img src="/images/cmt.svg" width="40"></button></a>
             <% } }}%>
         
             </div>
       <div class="detail">
-        <a href="/seeker/seekerDJRI?provID=<%= providers[x]["_id"] %>&jobID=<%= id %>"><button style="background: red;" class="apply-btn"><b>Ignore</b></button></a>
+        <a href="/seeker/seekerDJRI?provID=<%= providers[x]['_id'] %>&jobID=<%= id %>"><button style="background: red;" class="apply-btn"><b>Ignore</b></button></a>
     </div>
 
     </div>

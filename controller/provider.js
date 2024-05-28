@@ -93,7 +93,9 @@ const jobView = async (req, res) => {
     const profile = await provProfile
       .find({ email: req.session.email })
       .limit(1);
+      console.log("Profile"+profile)
     const provider = await provProfile.findOne({ email: req.session.email });
+
     if (profile.length != 0) {
       const skil = "skills";
       const skill = profile[0][skil];
@@ -101,16 +103,24 @@ const jobView = async (req, res) => {
         skill: { $in: skill },
         status: "Unassigned",
       });
-
+      if(jobs.length != 0)
+        {
       const providerId = await signup.findOne({ fullname: req.session.user });
       const seekerId = await signup.findOne({ fullname: jobs[0].fullname });
       console.log("seeekekeke", seekerId);
-      console.log("Id", seekerId._id);
+      console.log("Id", provider["_id"]);
       res.render("jobView", {
         job: jobs,
+        temp: "id",
+        xyz:provider["_id"],
         seekerID: seekerId._id,
         providerID: providerId._id,
       });
+    }
+    else {
+      const jobs = [];
+      res.render("jobView", { job: jobs });
+    }
     } else {
       const jobs = [];
       res.render("jobView", { job: jobs });
