@@ -20,12 +20,12 @@ document.getElementById('otpform').addEventListener('submit', function(event) {
         {
             console.log("OTP does not match");
             const message = "OTP does not match";
-        window.location.href = `http://localhost:3302/otpform?message=${message}&email=${data.email}`;
+        window.location.href = `/otpform?message=${message}&email=${data.email}`;
         }
         else{
             console.log("otp match, login form up");
             const message = "";
-        window.location.href = `http://localhost:3302/resetform?message=${message}&email=${data.email}`;
+        window.location.href = `/resetform?message=${message}&email=${data.email}`;
         }
     })
     .catch(error => {

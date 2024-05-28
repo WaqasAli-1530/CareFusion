@@ -381,9 +381,9 @@ submitRatingBtn.addEventListener('click', async () => {
         modal.style.display = 'none';
         const seeker = document.getElementById('seeker').value;
         const job = document.getElementById('job').value;
-        fetch(`http://localhost:3302/provider/rating?value=${selectedRating.value}&seeker=${seeker}&job=${job}`) // must update according to port number
+        fetch(`/provider/rating?value=${selectedRating.value}&seeker=${seeker}&job=${job}`) // must update according to port number
 .then((response) => response.json())
-.then(window.location.href = 'http://localhost:3302/provider/dashboard')
+.then(window.location.href = '/provider/dashboard')
         console.log(selectedRating.value);
     } else {
         alert('Please select a rating');

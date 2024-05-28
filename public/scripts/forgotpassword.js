@@ -23,12 +23,12 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
         {
             console.log("Email does not exist");
             const message = "Email does not exist";
-            window.location.href = `http://localhost:3302/forgotPassword?message=${message}`;
+            window.location.href = `/forgotPassword?message=${message}`;
         }
         else{
             console.log("Email exist, otp form up");
             const message = "";
-            window.location.href = `http://localhost:3302/otpform?message=${message}&email=${data.email}`;
+            window.location.href = `/otpform?message=${message}&email=${data.email}`;
         }
     })
     .catch(error => {

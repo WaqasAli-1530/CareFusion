@@ -316,9 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.style.display = 'none';
             const prov = document.getElementById('prov').value;
             const job = document.getElementById('job').value;
-            fetch(`http://localhost:3302/seeker/rating?value=${selectedRating.value}&prov=${prov}&job=${job}`) // must update according to port number
+            fetch(`/seeker/rating?value=${selectedRating.value}&prov=${prov}&job=${job}`) // must update according to port number
     .then((response) => response.json())
-    .then(window.location.href = 'http://localhost:3302/seeker/dashboard')
+    .then(window.location.href = '/seeker/dashboard')
             console.log(selectedRating.value);
         } else {
             alert('Please select a rating');
