@@ -86,14 +86,13 @@
                   <li class="nav-item">
                     <a class="nav-link active text-white  p-2" aria-current="page" href="#">HOME</a>
                   </li>
+                  <%  if (user !== "Service Provider") { %>
                   <li class="nav-item">
-                    <a class="nav-link text-white p-2" href="/services/services">SERVICES</a>
+                    <a class="nav-link text-white p-2" href="/services/services">What We Do</a>
                   </li>
+                  <% } %>
                   <li class="nav-item">
                     <a class="nav-link text-white p-2" href="#About">ABOUT US</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active text-white p-2" href="#">BLOGS</a>
                   </li>
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white p-2 text-uppercase" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -114,7 +113,7 @@
 
                     <div class="dropdown">
                       <a class="d-inline-block dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="./../../uploads/<%= profileImage %>" alt="Profile Image" style="margin-left: 10px;margin-right: 10px;" class="rounded-circle mt-3" width="30" height="30" onerror="this.onerror=null; this.src='/images/profile.png';">
+                    <img src="/uploads/<%= profileImage %>" alt="Profile Image" style="margin-left: 10px;margin-right: 10px;" class="rounded-circle mt-3" width="30" height="30" onerror="this.onerror=null; this.src='/images/profile.png';">
                     </a>
                      <ul class="dropdown-menu bg-light" aria-labelledby="profileDropdown">
                       <li><a class="dropdown-item" href="/provider/dashboard">Dashboard</a></li>

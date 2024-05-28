@@ -127,7 +127,7 @@ const jobView = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-  }
+  }
 };
 
 const providerProfile = (req, res) => {

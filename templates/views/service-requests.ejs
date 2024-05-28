@@ -102,25 +102,26 @@
                                         
                                     </tr>
                                 </thead>
-                                <% jobs.forEach(jobPost => { %>
+                                
+                                <% for(var x = 0; x < jobs.length; x++) { %>
                                 <tbody>
                                     <tr>
-                                        <% if(jobPost.status != "Completed") { %>
-                                        <td><%=jobPost.fullname%></td>
-                                        <td><% if (prov != "") { %>
-                                            <%= prov.fullname %>
+                                        <% if(jobs[x].status != "Complete") { %>
+                                        <td><%=jobs[x].fullname%></td>
+                                        <td><% if (jobs[x].assignProv != "") { %>
+                                            <%= prov[x] %>
                                         <% } else { %>
                                             Nill
                                         <% } %> </td>
-                                        <td><%=jobPost.skill%></td>
-                                        <td><%=jobPost.status%></td>
-                                        <td><%= new Date(jobPost.date).toLocaleDateString() %></td>
+                                        <td><%=jobs[x].skill%></td>
+                                        <td><%=jobs[x].status%></td>
+                                        <td><%= new Date(jobs[x].date).toLocaleDateString() %></td>
                                             
                                     <% } %>
                                     </tr>
                                     
                                 </tbody>
-                            <% });%>
+                            <% }%>
                             </table>
                         </div>
                     </div>

@@ -56,7 +56,7 @@ const provProfileSchema =new schema({
         default: []
     },
     blocked:{
-        type: String,
+        type: Boolean,
         default : false
     }
 });

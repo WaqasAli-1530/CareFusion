@@ -9,6 +9,7 @@ const gym = (req,res) => {res.render("gym")}
 const maid = (req,res) => {res.render("maid")}
 const makeUp = (req,res) => {res.render("make-up")}
 const tutor= (req,res) => {res.render("tutor")}
+const healthcare = (req,res) => {res.render("healthcare")}
 
 const availFormAction = async (req, res) => {
     const {serviceType, location, estimatedBudget, serviceDate, serviceTime} = req.body;
@@ -27,4 +28,4 @@ const availFormAction = async (req, res) => {
         console.error('Error in availing that service: ', error);
     }
 }
-module.exports = {services, architect, babySitter, chef, eventPlanner, gym, maid, makeUp, tutor, availFormAction}
+module.exports = {services, architect, babySitter, chef, eventPlanner, gym, maid, makeUp, tutor, availFormAction, healthcare}

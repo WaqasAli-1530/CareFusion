@@ -40,18 +40,32 @@ const loginAction = async (req, res) => {
   const { username, password } = req.body;
 
   const user = await signup.find(req.body).limit(1);
+  
   const admn = await adminn.findOne(req.body);
-  console.log(req.body)
 
   // console.log(user)
   let alreadyProv= false;
   if (user.length != 0) {
-    if(!user[0].blocked) {
-    req.session.user = user[0].fullname;
-    req.session.email = user[0].email;
-    req.session.signUpAs = user[0].signedUpAs;
-    const profile = await provProfile.findOne({ email: user[0].email });
-    let profileImage = "";
+    console.log("FSDG", user[0].signedUpAs);
+    if(user[0].signedUpAs === "Service Seeker"){
+      let profileImage = "";
+      req.session.user = user[0].fullname;
+      req.session.email = user[0].email;
+      req.session.signUpAs = user[0].signedUpAs;
+      res.render("home", {
+        user: req.session.signUpAs,
+        profileImage: profileImage,
+      });
+    }
+    else{
+      const prov = await provProfile.findOne({email: user[0].email});
+      let profileImage = "";
+      console.log("blo", prov.blocked);
+      if(!prov.blocked) {
+        req.session.user = user[0].fullname;
+        req.session.email = user[0].email;
+        req.session.signUpAs = user[0].signedUpAs;
+        const profile = await provProfile.findOne({ email: user[0].email });
     
     if (profile) {
       let profileImage = profile.profilePicture;
@@ -61,16 +75,18 @@ const loginAction = async (req, res) => {
     else{
       alreadyProv = false;
     }
-    // console.log(req.session.user, "  ", req.session.email);
     res.render("home", {
       user: req.session.signUpAs,
       profileImage: profileImage,
       alreadyProv: alreadyProv
     });
-  }
-  else{
+   }
+   else{
     res.render("block");
   }
+  // console.log(req.session.user, "  ", req.session.email);
+   
+   }
   } else if (admn && admn.length != 0) {
         req.session.user = "Admin";
         const totalProv = await provProfile.find();
@@ -268,12 +284,16 @@ const notification = async (req, res)=>{
 }
 const serviceReq = async (req, res)=>{
   const jobReq = await job.find();
-  const prov="";
-  if(jobReq.assignProv){
-    prov = await signup.findOne({assignProv: jobReq.assignProv}); 
+  let prov="";
+  var arr=[];
+  for(var x = 0; x < jobReq.length; x++){
+  if(jobReq[x].assignProv){
+    prov = await provProfile.findOne({_id: jobReq[x].assignProv}); 
+    arr[x] = prov.fullname;
   }
+}
   console.log(prov);
-  res.render("service-requests", {jobs: jobReq, prov});
+  res.render("service-requests", {jobs: jobReq, prov: arr});
 }
 
 const complains = async (req, res)=>{
@@ -331,8 +351,6 @@ const status = async (req, res)=>{
 const statusAction = async(req, res)=>{
   try {
     const profile = await provProfile.findById(req.params.id);
-    console.log(profile);
-
     if (!profile) {
         return res.status(404).json({ message: 'Profile not found' });
     }
