@@ -236,7 +236,7 @@ const update_account = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  if (req.session.user == undefined || req.session.user == "Visitor") {
+  if (req.session.user == "Visitor") {
     res.render("login", { message: "Please login to get dashboard" });
   } else {
     const email = req.session.email;
