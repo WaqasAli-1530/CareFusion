@@ -46,7 +46,6 @@ const loginAction = async (req, res) => {
   // console.log(user)
   let alreadyProv= false;
   if (user.length != 0) {
-    console.log("FSDG", user[0].signedUpAs);
     if(user[0].signedUpAs === "Service Seeker"){
       let profileImage = "";
       req.session.user = user[0].fullname;
@@ -60,7 +59,7 @@ const loginAction = async (req, res) => {
     else{
       const prov = await provProfile.findOne({email: user[0].email});
       let profileImage = "";
-      console.log("blo", prov.blocked);
+      if (prov){
       if(!prov.blocked) {
         req.session.user = user[0].fullname;
         req.session.email = user[0].email;
@@ -84,6 +83,16 @@ const loginAction = async (req, res) => {
    else{
     res.render("block");
   }
+ }else{
+  console.log("sadar");
+    req.session.user = user[0].fullname;
+    req.session.email = user[0].email;
+    req.session.signUpAs = user[0].signedUpAs;
+    res.render("home", {
+      user: req.session.signUpAs,
+      profileImage: profileImage,
+    });
+ }
   // console.log(req.session.user, "  ", req.session.email);
    
    }
@@ -97,8 +106,9 @@ const loginAction = async (req, res) => {
     var message = "Invalid uername or password";
     const redirectUrl = "/login?message=" + encodeURIComponent(message);
     res.redirect(redirectUrl);
-  }
+  }
 };
+
 
 const signOut = (req, res) => {
   req.session.destroy((err) => {
