@@ -2,15 +2,15 @@
   "name": "fyp_carefusion",
   "version": "1.0.0",
   "description": "\"Final Year Project CareFusion\"",
-  "main": "main.js",
+  "main": "index.js",
   "engines":{
     "node":"18.x"
   },
   "scripts": {
-    "start": "node main.js",
-    "dev": "nodemon main.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "author": "\"Muhammad Awais\"",
+  "author": "\"Waqas Ali\"",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",
