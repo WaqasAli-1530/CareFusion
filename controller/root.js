@@ -28,7 +28,7 @@ const signupAction = async (req, res) => {
     }
     req.session.user = name;
     req.session.email = emailId;
-    res.redirect("/services/services");
+    res.redirect("/login");
   } else {
     var message = "Username or Email already exists";
     const redirectUrl = "/signup?message=" + encodeURIComponent(message);
@@ -106,9 +106,8 @@ const loginAction = async (req, res) => {
     var message = "Invalid uername or password";
     const redirectUrl = "/login?message=" + encodeURIComponent(message);
     res.redirect(redirectUrl);
-  }
+  }
 };
-
 
 const signOut = (req, res) => {
   req.session.destroy((err) => {
@@ -116,7 +115,7 @@ const signOut = (req, res) => {
       console.error("Error destroying session:", err);
       res.status(500).send("Internal Server Error");
     } else {
-      res.redirect("/"); // Redirect to the home page
+      res.redirect("/"); // Redirecting to home page
     }
   });
 };
@@ -244,7 +243,12 @@ const forgetPassword = async (req, res) => {
 const chatView = async (req,res)=>{
   const { seekerID, providerID } = req.query;
   const user = await signup.findOne({ fullname: req.session.user });
-  if(user.signedUpAs === 'Service Seeker') {
+  console.log("in root", providerID);
+  console.log("signup", user);
+  console.log("useroutside", user._id);
+
+  if(user && user.signedUpAs === 'Service Seeker') {
+    console.log("user", user._id);
     res.render('chat', { seekerID:user._id, providerID,uname: req.session.user });
   }else {
     res.render('chat', { seekerID: providerID, providerID: seekerID,uname: req.session.user });

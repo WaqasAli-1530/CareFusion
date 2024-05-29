@@ -92,7 +92,7 @@ async function showData(category, obj) {
 }
 
 async function showShortlisted() {
-  fetch(`/seeker/getShortlisted`) // must update according to port number
+  fetch(`http://localhost:3302/seeker/getShortlisted`) // must update according to port number
     .then((response) => response.json())
     .then((data) => {
       if (data["login"]) {

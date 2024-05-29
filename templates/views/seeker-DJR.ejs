@@ -186,7 +186,7 @@
             <button style="background-color: aliceblue; border: white;"><img src="/images/cmt.svg" width="40"></button></a>
           <% } else { %>
             <a href="/seeker/seekerDJRA?provID=<%= providers[x]['_id'] %>&jobID=<%= id %>"><button class="apply-btn"><b>Approve</b></button></a>
-            <a href="/chat?seekerID=<%= seekerID %>&providerID=<%= provID %>">
+            <a href="/chat?seekerID=<%= seekerID %>&providerID=<%= providers[x]['_id'] %>">
               <button style="background-color: aliceblue; border: white;"><img src="/images/cmt.svg" width="40"></button></a>
             <% } }}%>
         

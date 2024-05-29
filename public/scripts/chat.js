@@ -47,7 +47,7 @@ if (typeof senderId === 'undefined' || typeof receiverId === 'undefined' || type
         console.log('Sending message:', msg); // Debugging line
 
         // Append the outgoing message to the UI
-        appendMessage(msg, 'outgoing');
+        appendMessage(msg, 'outgoing', flag = 'false');
         textarea.value = "";
         scrollToBottom();
 
@@ -80,9 +80,15 @@ if (typeof senderId === 'undefined' || typeof receiverId === 'undefined' || type
         
         // Determine the type of message (outgoing or incoming)
         const messageType = (msg.sender === senderId) ? 'outgoing' : 'incoming';
-        
+        let flag;
+        if (messageType === 'outgoing'){
+            flag = 'false';
+        }
+        else{
+            flag = 'true';
+        }
         // Append the message to the UI with the appropriate type
-        appendMessage(msg, messageType);
+        appendMessage(msg, messageType, flag);
         scrollToBottom();
     });
     // Function to scroll to the bottom of the message area

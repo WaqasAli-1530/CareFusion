@@ -10,7 +10,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "\"Waqas Ali\"",
+  "author": "Waqas Ali",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",

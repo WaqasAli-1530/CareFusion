@@ -105,9 +105,10 @@ const jobView = async (req, res) => {
       });
       if(jobs.length != 0)
         {
-      const providerId = await signup.findOne({ fullname: req.session.user });
+      const providerId = await provProfile.findOne({ fullname: req.session.user });
       const seekerId = await signup.findOne({ fullname: jobs[0].fullname });
-      console.log("seeekekeke", seekerId);
+      console.log("provID", providerId);
+      console.log("seekerID", seekerId);
       console.log("Id", provider["_id"]);
       res.render("jobView", {
         job: jobs,
