@@ -67,7 +67,7 @@ app.set("views", viewPath)
 
 
 //middleware for handling url encoded data (form data)
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 
 // buildin middleware for json
 app.use(express.json());
