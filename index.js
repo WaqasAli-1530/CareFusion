@@ -9,6 +9,8 @@ const port = process.env.PORT || 3000;
 const http = require("http").createServer(app)
 const io = require("socket.io")(http);
 const chatMessage = require("./model/chatMessage")
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 // Code for automatically chnage status to complete
 // const cron = require('node-cron');
 // const JobPost = require('./model/JobPost');

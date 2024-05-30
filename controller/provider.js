@@ -22,11 +22,11 @@ const provProfileAction = async (req, res) => {
     } else if (err) {
       return res.status(500).json(err);
     }
-    console.log(req.session.email);
+    console.log(req.cookies.email);
     // checking req.file is defined or not
     const profilePicture = req.file ? req.file.filename : null;
-    if (req.session.email != null) {
-      const prov = await signup.findOne({ email: req.session.email });
+    if (req.cookies.email != null) {
+      const prov = await signup.findOne({ email: req.cookies.email });
 
       const { phoneNo, cnic, address, dob, gender, hometown, skills, about } =
         req.body;
@@ -63,19 +63,19 @@ const updateProfile = async (req, res) => {
   if (phoneNo != undefined || address != undefined || hometown != undefined) {
     if (phoneNo != undefined) {
       await provProfile.updateOne(
-        { email: req.session.email },
+        { email: req.cookies.email },
         { phoneNo: phoneNo }
       );
     }
     if (address != undefined) {
       await provProfile.updateOne(
-        { email: req.session.email },
+        { email: req.cookies.email },
         { address: address }
       );
     }
     if (hometown != undefined) {
       await provProfile.updateOne(
-        { email: req.session.email },
+        { email: req.cookies.email },
         { hometown: hometown }
       );
     }
@@ -91,10 +91,10 @@ const updateProfile = async (req, res) => {
 const jobView = async (req, res) => {
   try {
     const profile = await provProfile
-      .find({ email: req.session.email })
+      .find({ email: req.cookies.email })
       .limit(1);
       console.log("Profile"+profile)
-    const provider = await provProfile.findOne({ email: req.session.email });
+    const provider = await provProfile.findOne({ email: req.cookies.email });
 
     if (profile.length != 0) {
       const skil = "skills";
@@ -105,7 +105,7 @@ const jobView = async (req, res) => {
       });
       if(jobs.length != 0)
         {
-      const providerId = await provProfile.findOne({ fullname: req.session.user });
+      const providerId = await provProfile.findOne({ fullname: req.cookies.user });
       const seekerId = await signup.findOne({ fullname: jobs[0].fullname });
       console.log("provID", providerId);
       console.log("seekerID", seekerId);
@@ -135,7 +135,7 @@ const providerProfile = (req, res) => {
   res.render("provProfile");
 };
 const dashboard = async (req, res) => {
-  const user = await provProfile.findOne({ email: req.session.email });
+  const user = await provProfile.findOne({ email: req.cookies.email });
   const id = user["_id"];
   const comp = await jobpost.find({
     assignProv: id,
@@ -167,15 +167,15 @@ const dashboard = async (req, res) => {
 };
 const profile = async (req, res) => {
   res.render("profile", {
-    profileImage: req.session.image,
-    data: await provProfile.findOne({ email: req.session.email }),
+    profileImage: req.cookies.image,
+    data: await provProfile.findOne({ email: req.cookies.email }),
   });
 };
 const stats = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const prov = await provProfile.find({ email: req.session.email });
+    const prov = await provProfile.find({ email: req.cookies.email });
     console.log("Provider: " + prov);
     const provID = prov[0]["_id"];
     const jobs = await jobpost.find({
@@ -186,10 +186,10 @@ const stats = async (req, res) => {
   }
 };
 const completejob = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const prov = await provProfile.find({ email: req.session.email });
+    const prov = await provProfile.find({ email: req.cookies.email });
     console.log("Provider: " + prov);
     const provID = prov[0]["_id"];
     const jobs = await jobpost.find({ status: "Complete", assignProv: provID });
@@ -199,7 +199,7 @@ const completejob = async (req, res) => {
 const applyjob = async (req, res) => {
   try {
     console.log(req.query);
-    const user = await provProfile.find({ email: req.session.email }).limit(1);
+    const user = await provProfile.find({ email: req.cookies.email }).limit(1);
     if (user.length !== 0) {
       const prov_id = user[0]["_id"];
       const price = req.query.price; // Retrieve the price from query parameters
@@ -227,9 +227,9 @@ const applyjob = async (req, res) => {
 
 const assignJobs = async (req, res) => {
   console.log(req.query);
-  const user = await provProfile.find({ email: req.session.email }).limit(1);
+  const user = await provProfile.find({ email: req.cookies.email }).limit(1);
   if (user.length != 0) {
-    const prov = await provProfile.find({ email: req.session.email });
+    const prov = await provProfile.find({ email: req.cookies.email });
     // console.log("Provider: " + prov);
     const provID = prov[0]["_id"];
     const jobs = await jobpost.find({
@@ -244,7 +244,7 @@ const assignJobs = async (req, res) => {
   }
 };
 const confirm_job = async (req, res) => {
-  const user = await provProfile.find({ email: req.session.email }).limit(1);
+  const user = await provProfile.find({ email: req.cookies.email }).limit(1);
   if (user.length != 0) {
     const id = req.query.id;
     await jobpost.updateOne({ _id: id }, { status: "In Progress" });
@@ -256,7 +256,7 @@ const confirm_job = async (req, res) => {
   }
 };
 const reject_job = async (req, res) => {
-  const user = await provProfile.find({ email: req.session.email }).limit(1);
+  const user = await provProfile.find({ email: req.cookies.email }).limit(1);
   if (user.length != 0) {
     const id = req.query.id;
     await jobpost.updateOne({ _id: id }, { status: "Rejected" });
@@ -268,7 +268,7 @@ const reject_job = async (req, res) => {
   }
 };
 const rating = async (req, res) => {
-  const user = await provProfile.find({ email: req.session.email }).limit(1);
+  const user = await provProfile.find({ email: req.cookies.email }).limit(1);
   if (user.length != 0) {
     await jobpost.updateOne({ _id: req.query.job }, { seekRat: "true" });
     await signup.updateOne({ email: req.query.seeker }, { $push: { rating: req.query.value } });
@@ -280,7 +280,7 @@ const rating = async (req, res) => {
   }
 };
 const seekerProf = async (req, res) => {
-  const user = await provProfile.find({ email: req.session.email }).limit(1);
+  const user = await provProfile.find({ email: req.cookies.email }).limit(1);
   if (user.length != 0) {
     const seeker = await signup.findOne({email:req.query.email});
     const comp = await jobpost.find({email:req.query.email,status:"Complete"});

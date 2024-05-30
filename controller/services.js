@@ -1,6 +1,6 @@
 const availform = require("../model/availform")
 
-const services = (req,res)=> {res.render("services", {user: req.session.signUpAs})}
+const services = (req,res)=> {res.render("services", {user: req.cookies.signUpAs})}
 const architect = (req,res)=> {res.render("architect")}
 const babySitter = (req,res)=> {res.render("baby-sitter")}
 const chef = (req,res)=> {res.render("chef")}

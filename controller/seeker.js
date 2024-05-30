@@ -11,17 +11,17 @@ const getCategory = async (req, res) => {
 };
 
 const shortlist = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.send({ login: "login", message: "Please login to shortlist provider" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
       const skill = req.params.skill;
       const prov_mail = req.params.prov_mail;
       // console.log(skill + " " + prov_mail);
-      const shortlisted_by = req.session.email;
+      const shortlisted_by = req.cookies.email;
       try {
         // Check if shortlisted_by already exists in the database
         const existingShortlist = await ShortlistModel.findOne({
@@ -67,14 +67,14 @@ const shortlist = async (req, res) => {
 };
 
 const getShortlisted = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.send({ login: "login", message: "Login to get shortlisted provider" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      const shortlisted_by = req.session.email;
+      const shortlisted_by = req.cookies.email;
 
       try {
         // Find the shortlist entry based on shortlisted_by
@@ -143,7 +143,7 @@ const jobPostAction = async (req, res) => {
     start_time,
     end_time,
   } = req.body;
-  const userData = await signup.findOne({ email: req.session.email });
+  const userData = await signup.findOne({ email: req.cookies.email });
   const current = new Date();
   const jobPost = {
     fullname: userData["fullname"],
@@ -168,7 +168,7 @@ const jobPostAction = async (req, res) => {
 
 const deleteShortlistedObject = async (req, res) => {
   try {
-    const shortlisted_by = req.session.email;
+    const shortlisted_by = req.cookies.email;
     const prov_mail = req.params.email;
     // Find the document with the given shortlisted_by value
     const shortlistDoc = await ShortlistModel.findOne({ shortlisted_by });
@@ -212,7 +212,7 @@ const jobPostCard = async (req, res) => {
 };
 
 const update_account = async (req, res) => {
-  const email = req.session.email;
+  const email = req.cookies.email;
   try {
     await signup.updateOne(
       {
@@ -236,10 +236,10 @@ const update_account = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  if (req.session.user == undefined || req.session.user == "Visitor") {
+  if (req.cookies.user == undefined || req.cookies.user == "Visitor") {
     res.render("login", { message: "Please login to get dashboard" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -252,10 +252,10 @@ const dashboard = async (req, res) => {
   }
 };
 const seekerDA = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -268,10 +268,10 @@ const seekerDA = async (req, res) => {
   }
 };
 const seekerDJ = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -285,10 +285,10 @@ const seekerDJ = async (req, res) => {
   }
 };
 const seekerDW = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -311,10 +311,10 @@ const seekerDW = async (req, res) => {
   }
 };
 const seekerDB = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -328,10 +328,10 @@ const seekerDB = async (req, res) => {
   }
 };
 const seekerDIN = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -345,10 +345,10 @@ const seekerDIN = async (req, res) => {
   }
 };
 const payment = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -412,10 +412,10 @@ const payment = async (req, res) => {
   }
 };
 const seekerDJR = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -492,7 +492,7 @@ const seekerDJR = async (req, res) => {
           skill: req.query.skill,
           id: req.query.id,
           status: req.query.status,
-          user: req.session.user,
+          user: req.cookies.user,
           data: data,
           bid: [{price: pri,id: req.query.assignProv}],
           seekerID: user._id,
@@ -508,10 +508,10 @@ const seekerDJR = async (req, res) => {
   }
 };
 const seekerDJRA = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -544,10 +544,10 @@ const seekerDJRA = async (req, res) => {
   }
 };
 const seekerDJRI = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -565,10 +565,10 @@ const seekerDJRI = async (req, res) => {
   }
 };
 const seekerDJD = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -584,16 +584,16 @@ const seekerDJD = async (req, res) => {
 };
 
 const findWorker = (req, res) => {
-  const user = req.session.user;
+  const user = req.cookies.user;
   // console.log(user);
   res.render("findWorker", { user });
 };
 
 const postJob = async (req, res) => {
- if (req.session.user === undefined || req.session.user === "Visitor") {
+ if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to post a job" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -606,11 +606,11 @@ const postJob = async (req, res) => {
   }
 };
 const jobAssign = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to post a job" });
 
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -627,15 +627,15 @@ const jobAssign = async (req, res) => {
   }
 };
 const seekerDSL = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get shortlist" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
       const shortlist = await ShortlistModel.find({
-        shortlisted_by: req.session.email,
+        shortlisted_by: req.cookies.email,
       });
       if (shortlist.length != 0) {
         const x = shortlist[0]["shortlisted"];
@@ -686,7 +686,7 @@ const jobAssignAction = async (req, res) => {
     provEmail,
     price
   } = req.body;
-  const userData = await signup.find({ email: req.session.email });
+  const userData = await signup.find({ email: req.cookies.email });
   console.log(userData);
   const prof = await provider.find({ email: provEmail });
   const id = prof[0]["_id"];
@@ -715,7 +715,7 @@ const jobAssignAction = async (req, res) => {
 };
 const deleteShortlistedAssign = async (req, res) => {
   try {
-    const shortlisted_by = req.session.email;
+    const shortlisted_by = req.cookies.email;
     const prov_mail = req.query.email;
     // Find the document with the given shortlisted_by value
     const shortlistDoc = await ShortlistModel.findOne({ shortlisted_by });
@@ -753,10 +753,10 @@ const deleteShortlistedAssign = async (req, res) => {
 };
 
 const seekerDJN = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to post a job" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
@@ -791,10 +791,10 @@ const seekerDJN = async (req, res) => {
   }
 };
 const rating = async (req, res) => {
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to post a job" });
   } else {
-    const email = req.session.email;
+    const email = req.cookies.email;
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {

@@ -26,8 +26,8 @@ const signupAction = async (req, res) => {
     } catch (error) {
       console.error("Error saving data:", error);
     }
-    req.session.user = name;
-    req.session.email = emailId;
+    res.cookie('user', name, { maxAge: 900000, httpOnly: true });
+    res.cookie('email', emailId, { maxAge: 900000, httpOnly: true });
     res.redirect("/login");
   } else {
     var message = "Username or Email already exists";
@@ -48,11 +48,12 @@ const loginAction = async (req, res) => {
   if (user.length != 0) {
     if(user[0].signedUpAs === "Service Seeker"){
       let profileImage = "";
-      req.session.user = user[0].fullname;
-      req.session.email = user[0].email;
-      req.session.signUpAs = user[0].signedUpAs;
+      res.cookie('user', user[0].fullname, { maxAge: 900000, httpOnly: true });
+    res.cookie('email', user[0].email, { maxAge: 900000, httpOnly: true });
+    res.cookie('signUpAs', user[0].signedUpAs, { maxAge: 900000, httpOnly: true });
+      
       res.render("home", {
-        user: req.session.signUpAs,
+        user: req.cookies.signUpAs,
         profileImage: profileImage,
       });
     }
@@ -61,21 +62,21 @@ const loginAction = async (req, res) => {
       let profileImage = "";
       if (prov){
       if(!prov.blocked) {
-        req.session.user = user[0].fullname;
-        req.session.email = user[0].email;
-        req.session.signUpAs = user[0].signedUpAs;
-        const profile = await provProfile.findOne({ email: user[0].email });
+        res.cookie('user', user[0].fullname, { maxAge: 900000, httpOnly: true });
+    res.cookie('email', user[0].email, { maxAge: 900000, httpOnly: true });
+    res.cookie('signUpAs', user[0].signedUpAs, { maxAge: 900000, httpOnly: true });
+        
     
     if (profile) {
       let profileImage = profile.profilePicture;
-      req.session.image = profileImage;
+      res.cookie('image', profileImage, { maxAge: 900000, httpOnly: true });
       alreadyProv = true;
     }
     else{
       alreadyProv = false;
     }
     res.render("home", {
-      user: req.session.signUpAs,
+      user: req.cookies.signUpAs,
       profileImage: profileImage,
       alreadyProv: alreadyProv
     });
@@ -85,19 +86,19 @@ const loginAction = async (req, res) => {
   }
  }else{
   console.log("sadar");
-    req.session.user = user[0].fullname;
-    req.session.email = user[0].email;
-    req.session.signUpAs = user[0].signedUpAs;
+  res.cookie('user', user[0].fullname, { maxAge: 900000, httpOnly: true });
+    res.cookie('email', user[0].email, { maxAge: 900000, httpOnly: true });
+    res.cookie('signUpAs', user[0].signedUpAs, { maxAge: 900000, httpOnly: true });
+   
     res.render("home", {
-      user: req.session.signUpAs,
+      user: req.cookies.signUpAs,
       profileImage: profileImage,
     });
  }
-  // console.log(req.session.user, "  ", req.session.email);
    
    }
   } else if (admn && admn.length != 0) {
-        req.session.user = "Admin";
+    res.cookie('user', "Admin", { maxAge: 900000, httpOnly: true });
         const totalProv = await provProfile.find();
         const active = await job.find({status: "In Progress"});
         const comp = await job.find({status: "Complete"});
@@ -110,14 +111,11 @@ const loginAction = async (req, res) => {
 };
 
 const signOut = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Error destroying session:", err);
-      res.status(500).send("Internal Server Error");
-    } else {
-      res.redirect("/"); // Redirecting to home page
-    }
-  });
+  res.clearCookie('user'); // Clear the cookie named 'username'
+  res.clearCookie('email'); // Clear the cookie named 'username'
+  res.clearCookie('signUpAs'); // Clear the cookie named 'username'
+  res.clearCookie('image'); // Clear the cookie named 'username'
+  res.redirect('/'); // Redirecting to home page
 };
 const login = (req, res) => {
   const message = req.query.message || "";
@@ -242,21 +240,21 @@ const forgetPassword = async (req, res) => {
 };
 const chatView = async (req,res)=>{
   const { seekerID, providerID } = req.query;
-  const user = await signup.findOne({ fullname: req.session.user });
+  const user = await signup.findOne({ fullname: req.cookies.user });
   console.log("in root", providerID);
   console.log("signup", user);
   console.log("useroutside", user._id);
 
   if(user && user.signedUpAs === 'Service Seeker') {
     console.log("user", user._id);
-    res.render('chat', { seekerID:user._id, providerID,uname: req.session.user });
+    res.render('chat', { seekerID:user._id, providerID,uname: req.cookies.user });
   }else {
-    res.render('chat', { seekerID: providerID, providerID: seekerID,uname: req.session.user });
+    res.render('chat', { seekerID: providerID, providerID: seekerID,uname: req.cookies.user });
   }
   
 }
 const complain = async (req,res)=>{
-  if (req.session.user === undefined || req.session.user === "Visitor") {
+  if (req.cookies.user === undefined || req.cookies.user === "Visitor") {
     res.render("login", { message: "Please login to get Account details" });
   } else {
   res.render("complain");
@@ -359,7 +357,7 @@ const settings = async (req, res)=>{
 }
 const status = async (req, res)=>{
   const allprov = await provProfile.find();
-  res.render("status", {name: req.session.name, profiles: allprov});
+  res.render("status", {name: req.cookies.name, profiles: allprov});
 }
 
 const statusAction = async(req, res)=>{
