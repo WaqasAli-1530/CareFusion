@@ -46,13 +46,11 @@ const chatMessage = require("./model/chatMessage")
   // end of automaticaaly chnage status
 //creating session
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 
 app.use(session({
   secret: process.env.SESSION_KEY,
   resave: false,
   saveUninitialized: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection }),
   cookie: { maxAge: 180 * 60 * 1000 } // 3 hours
 }));
 
