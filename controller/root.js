@@ -48,12 +48,13 @@ const loginAction = async (req, res) => {
   if (user.length != 0) {
     if(user[0].signedUpAs === "Service Seeker"){
       let profileImage = "";
-      res.cookie('user', user[0].fullname, { maxAge: 900000, httpOnly: true });
-    res.cookie('email', user[0].email, { maxAge: 900000, httpOnly: true });
-    res.cookie('signUpAs', user[0].signedUpAs, { maxAge: 900000, httpOnly: true });
+      res.cookie('user', user[0].fullname, {maxAge: 900000,  httpOnly: true });
+    res.cookie('email', user[0].email, {maxAge: 900000, httpOnly: true });
+    res.cookie('signUpAs', user[0].signedUpAs, {maxAge: 900000,  httpOnly: true });
     const profile = await provProfile.findOne({ email: user[0].email });
+    console.log(req.cookies.signUpAs)
       res.render("home", {
-        user: req.cookies.signUpAs,
+        user: user[0].signedUpAs,
         profileImage: profileImage,
       });
     }
@@ -62,21 +63,21 @@ const loginAction = async (req, res) => {
       let profileImage = "";
       if (prov){
       if(!prov.blocked) {
-        res.cookie('user', user[0].fullname, { maxAge: 900000, httpOnly: true });
-    res.cookie('email', user[0].email, { maxAge: 900000, httpOnly: true });
-    res.cookie('signUpAs', user[0].signedUpAs, { maxAge: 900000, httpOnly: true });
+        res.cookie('user', user[0].fullname, { maxAge: 900000,  httpOnly: true });
+    res.cookie('email', user[0].email, {maxAge: 900000,  httpOnly: true });
+    res.cookie('signUpAs', user[0].signedUpAs, {maxAge: 900000,   httpOnly: true });
         
     const profile = await provProfile.findOne({ email: user[0].email });
     if (profile) {
       let profileImage = profile.profilePicture;
-      res.cookie('image', profileImage, { maxAge: 900000, httpOnly: true });
+      res.cookie('image', profileImage, {maxAge: 900000,  httpOnly: true });
       alreadyProv = true;
     }
     else{
       alreadyProv = false;
     }
     res.render("home", {
-      user: req.cookies.signUpAs,
+      user: user[0].signedUpAs,
       profileImage: profileImage,
       alreadyProv: alreadyProv
     });
@@ -86,12 +87,12 @@ const loginAction = async (req, res) => {
   }
  }else{
   console.log("sadar");
-  res.cookie('user', user[0].fullname, { maxAge: 900000, httpOnly: true });
-    res.cookie('email', user[0].email, { maxAge: 900000, httpOnly: true });
-    res.cookie('signUpAs', user[0].signedUpAs, { maxAge: 900000, httpOnly: true });
+  res.cookie('user', user[0].fullname, { maxAge: 900000,  httpOnly: true });
+    res.cookie('email', user[0].email, { maxAge: 900000,  httpOnly: true });
+    res.cookie('signUpAs', user[0].signedUpAs, {maxAge: 900000,   httpOnly: true });
    
     res.render("home", {
-      user: req.cookies.signUpAs,
+      user: user[0].signedUpAs,
       profileImage: profileImage,
     });
  }

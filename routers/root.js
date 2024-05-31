@@ -7,9 +7,9 @@ const {signupAction,insurance,complaiaction,loginAction,security,chatView,compla
 
 
 router.route("/").get((req,res)=>{
-    if(req.session.signUpAs === undefined) {
-        req.session.signUpAs = "Visitor";
-    } res.render("home", {user: req.session.signUpAs,profileImage:""})});
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    } res.render("home", {user: req.cookies.signUpAs,profileImage:""})});
 router.route("/login").get(login);
 router.route("/signup").get(signUp);
 router.route("/T&C-PP").get((req,res)=>{res.render("T&C-PP")})
