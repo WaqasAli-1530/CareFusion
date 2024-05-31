@@ -51,7 +51,7 @@ const loginAction = async (req, res) => {
       res.cookie('user', user[0].fullname, { maxAge: 900000, httpOnly: true });
     res.cookie('email', user[0].email, { maxAge: 900000, httpOnly: true });
     res.cookie('signUpAs', user[0].signedUpAs, { maxAge: 900000, httpOnly: true });
-      
+    const profile = await provProfile.findOne({ email: user[0].email });
       res.render("home", {
         user: req.cookies.signUpAs,
         profileImage: profileImage,
@@ -66,7 +66,7 @@ const loginAction = async (req, res) => {
     res.cookie('email', user[0].email, { maxAge: 900000, httpOnly: true });
     res.cookie('signUpAs', user[0].signedUpAs, { maxAge: 900000, httpOnly: true });
         
-    
+    const profile = await provProfile.findOne({ email: user[0].email });
     if (profile) {
       let profileImage = profile.profilePicture;
       res.cookie('image', profileImage, { maxAge: 900000, httpOnly: true });
