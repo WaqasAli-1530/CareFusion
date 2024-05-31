@@ -1,0 +1,66 @@
+<!--Navigation Bar-->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img src="/images/home/logo.png" width="220"></a>
+        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center " id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active text-white  p-2" aria-current="page" href="/">HOME</a>
+              </li>
+              <%  if (user !== "Service Provider") { %>
+              <li class="nav-item">
+                <a class="nav-link text-white p-2" href="/services/services">WHAT WE DO</a>
+              </li>
+              <% } %>
+              <li class="nav-item">
+                <a class="nav-link text-white p-2" href="#About">ABOUT US</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white p-2 text-uppercase" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Safety and Resilience
+                </a>
+                <ul class="dropdown-menu bg-light">
+                  <li><a class="dropdown-item  text-uppercase" href="/insurance">Insurance</a></li>
+                  <li><a class="dropdown-item  text-uppercase" href="/complain">Complaints</a></li>
+                  <li><a class="dropdown-item  text-uppercase" href="/security">Safety Measures</a></li>
+                </ul>
+              </li>
+              <% if (user === "Visitor") { %>
+              <a href="/login" class="btn btn-primary border-0 fw-bold mt-1 px-4 pt-2 login-btn rounded-5">LOGIN</a>
+              <% }  else if (user === "Service Provider") { %>
+                <div class="profile-container d-flex align-items-center">
+                <a href="/provider/provProfile" class="btn btn-primary border-0 fw-bold mt-2 mx-2 px-4 login-btn rounded-5">Become a Service Provider</a></li>
+                <a href="/provider/viewJob" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-5">View Jobs</a></li>
+
+                <div class="dropdown">
+                  <a class="d-inline-block dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="/uploads/<%= profileImage %>" alt="Profile Image" style="margin-left: 10px;margin-right: 10px;" class="rounded-circle mt-3" width="30" height="30" onerror="this.onerror=null; this.src='/images/profile.png';">
+                </a>
+                 <ul class="dropdown-menu bg-light" aria-labelledby="profileDropdown">
+                  <li><a class="dropdown-item" href="/provider/dashboard">Dashboard</a></li>
+                  <li><a class="dropdown-item" href="/signout">Sign Out</a></li>
+                </ul>
+                </div>
+               </div>
+              <% } else if (user === "Service Seeker") { %>
+                <div class="profile-container d-flex align-items-center">
+                  <a href="/seeker/postJob" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2">Post a service</a>
+                  <a href="/seeker/findWorker" style="margin-left: 10px;" class="btn btn-primary border-0 fw-bold mt-2 px-4 login-btn rounded-2">Find Worker</a>
+                  <div class="dropdown">
+                    <a class="d-inline-block dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <img src="<%= profileImage %>" alt="Profile Image" class="rounded-circle mt-3 ms-3" width="30" height="30" onerror="this.onerror=null; this.src='/images/profile.png';">
+                    </a>
+                    <ul class="dropdown-menu bg-light" aria-labelledby="profileDropdown">
+                      <li><a class="dropdown-item" href="/seeker/dashboard">Dashboard</a></li>
+                      <li><a class="dropdown-item" href="/signout">Sign Out</a></li>
+                    </ul>
+                  </div>
+                </div>
+              <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>

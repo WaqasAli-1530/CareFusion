@@ -2,10 +2,11 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 body {
-    background: url('/images/postJob.jpg') no-repeat center center fixed;
+    background-image: linear-gradient(to top, #5ee7df 0%, #b490ca 100%);
     background-size: cover;
 
 }
@@ -20,7 +21,7 @@ body {
     margin-bottom: 10px;
 }
 .text-container {
-    color: white;
+    color:black;
     margin: 0px auto;
     margin-top: 30px;
     margin-bottom: 30px;
@@ -42,7 +43,7 @@ body {
 
 .title {
     font-size: 20px;
-    color: white;
+    color: black;
     margin-top: 20px;
 }
 
@@ -62,10 +63,10 @@ body {
     margin-top: 5px;
     font-size: 15px;
     margin-bottom: 5px;
-    color: white;
+    color: black;
 }
 .form-control{
-    color: white;
+    color: black;
 }
 
 input,
@@ -107,7 +108,7 @@ button:hover {
 
 .textarea-control {
     grid-column: 1 / span 2;
-    color: white;
+    color: black;
 }
 
 .textarea-control textarea {

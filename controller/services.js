@@ -1,15 +1,56 @@
 const availform = require("../model/availform")
 
-const services = (req,res)=> {res.render("services", {user: req.cookies.signUpAs})}
-const architect = (req,res)=> {res.render("architect")}
-const babySitter = (req,res)=> {res.render("baby-sitter")}
-const chef = (req,res)=> {res.render("chef")}
-const eventPlanner = (req,res)=> {res.render("event-planner")}
-const gym = (req,res) => {res.render("gym")}
-const maid = (req,res) => {res.render("maid")}
-const makeUp = (req,res) => {res.render("make-up")}
-const tutor= (req,res) => {res.render("tutor")}
-const healthcare = (req,res) => {res.render("healthcare")}
+const services = (req,res)=> {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("services", {user: req.cookies.signUpAs,profileImage:""})}
+const architect = (req,res)=> {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("architect", {user: req.cookies.signUpAs,profileImage:""})}
+    
+const babySitter = (req,res)=> {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("baby-sitter" , {user: req.cookies.signUpAs,profileImage:""})}
+const chef = (req,res)=> {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("chef" , {user: req.cookies.signUpAs,profileImage:""})}
+const eventPlanner = (req,res)=> {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("event-planner" , {user: req.cookies.signUpAs,profileImage:""})}
+const gym = (req,res) => {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("gym" , {user: req.cookies.signUpAs,profileImage:""})}
+const maid = (req,res) => {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("maid" , {user: req.cookies.signUpAs,profileImage:""})}
+const makeUp = (req,res) => {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("makeup" , {user: req.cookies.signUpAs,profileImage:""})}
+const tutor= (req,res) => {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("tutor" , {user: req.cookies.signUpAs,profileImage:""})}
+const healthcare = (req,res) => {
+    if(req.cookies.signUpAs === undefined) {
+        req.cookies.signUpAs = "Visitor";
+    }
+    res.render("healthcare", {user: req.cookies.signUpAs,profileImage:""})}
 
 const availFormAction = async (req, res) => {
     const {serviceType, location, estimatedBudget, serviceDate, serviceTime} = req.body;
