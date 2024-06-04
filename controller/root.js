@@ -174,7 +174,7 @@ const loginAction = async (req, res) => {
     });
    }
    else{
-    res.render("block");
+    res.render("block",{mail: user[0].email});
   }
  }else{
   console.log("sadar");
@@ -640,7 +640,39 @@ const statusAction = async(req, res)=>{
     res.status(500).json({ message: err.message });
 }
 }
-
+const request = async (req,res)=>{
+  send(req.query.mail,"official.carefusion@gmail.com","Request For unblock",req.query.text);
+  console.log("sssss" + req.query.mail)
+  res.render("block")
+}
+function create(from) {
+    console.log("In Create Transporter");
+    return nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 25,
+      secure: false,
+      
+    });
+  }
+  // Function to send an email
+  async function send (from ,to, subject, text) {
+    const transporter = create(from);
+    console.log("Receiver mail : " + to);
+    const mailOptions = {
+      from: from,
+      to: to,
+      subject: subject,
+      html: text,
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+  }
 
 module.exports = {
   signupAction,
@@ -657,5 +689,5 @@ module.exports = {
   security,
   insurance,
   complaiaction, admin, notification, serviceReq, status,settings, statusAction, rejAction,
-  complains, payment 
+  complains, payment ,request
 };

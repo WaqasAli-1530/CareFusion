@@ -174,12 +174,40 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      setTimeout(function() {
-        document.getElementById('loader-wrapper').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-      }, 1000); // Adjust the timeout duration as needed
+  document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(function() {
+      document.getElementById('loader-wrapper').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    }, 1000); // Adjust the timeout duration as needed
+
+    // Get the form element
+    const form = document.querySelector('form');
+
+    // Add event listener for form submission
+    form.addEventListener('submit', function(event) {
+      // Get the start and end dates
+      const startDate = new Date(document.getElementById('start_date').value);
+      const endDate = new Date(document.getElementById('end_date').value);
+
+      // Check if end date is greater than start date
+      if (endDate < startDate) {
+        alert('End date should be greater than start date.');
+        event.preventDefault();
+        return;
+      }
+
+      // Get the start and end times
+      const startTime = new Date(`${startDate.toISOString().split('T')[0]}T${document.getElementById('start_time').value}`);
+      const endTime = new Date(`${endDate.toISOString().split('T')[0]}T${document.getElementById('end_time').value}`);
+
+      // Check if end time is greater than start time
+      if (endTime <= startTime) {
+        alert('End time should be greater than start time.');
+        event.preventDefault();
+        return;
+      }
     });
-  </script>
+  });
+</script>
 </body>
 </html>
