@@ -292,7 +292,7 @@ const seekerDW = async (req, res) => {
     const user = await signup.find({ email: email }).limit(1);
     const signedUpAs = user[0]["signedUpAs"];
     if (signedUpAs === "Service Seeker") {
-      const jobs = await JobPost.find({ email: email });
+      const jobs = await JobPost.find({ email: email,status:"In Progress" });
       const workers = [];
       for (let i = 0; i < jobs.length; i++) {
         if (jobs[i]["assignProv"] != "") {

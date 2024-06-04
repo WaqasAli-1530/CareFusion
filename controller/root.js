@@ -7,6 +7,7 @@ const complain_ = require("../model/complain");
 const adminn = require("../model/admin");
 const job = require("../model/JobPost");
 const avail = require("../model/availform");
+const goMail = require("../controller/sendMail");
 const signupAction = async (req, res) => {
   const { name, uname, emailId, pass, service } = req.body;
 
@@ -28,6 +29,95 @@ const signupAction = async (req, res) => {
     }
     res.cookie('user', name, { maxAge: 900000, httpOnly: true });
     res.cookie('email', emailId, { maxAge: 900000, httpOnly: true });
+    const text = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to [Your Company]</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .header {
+                background-color: #4CAF50;
+                color: #ffffff;
+                padding: 20px;
+                text-align: center;
+            }
+            .header h1 {
+                margin: 0;
+            }
+            .content {
+                padding: 20px;
+            }
+            .content h2 {
+                color: #4CAF50;
+            }
+            .content p {
+                line-height: 1.6;
+            }
+            .button {
+                display: inline-block;
+                margin: 20px 0;
+                padding: 10px 20px;
+                background-color: #4CAF50;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+            .footer {
+                background-color: #f4f4f4;
+                color: #888888;
+                text-align: center;
+                padding: 10px;
+                font-size: 12px;
+            }
+            .footer a {
+                color: #4CAF50;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Welcome to CareFusion!</h1>
+            </div>
+            <div class="content">
+                <h2>Hi ${name},</h2>
+                <p>Thank you for signing up with CareFusion as <b>${service}</b>. We're thrilled to have you join our community!</p>
+                <p>Here are a few things you can do to get started:</p>
+                <ul>
+                    <li>Explore our <a href="https://care-fusion-kappa.vercel.app/services/services">features</a> and discover how we can help you achieve your goals.</li>
+                    
+                </ul>
+                <a href="https://care-fusion-kappa.vercel.app/" class="button">Get Started</a>
+                <p>If you have any questions or need support, feel free to reply to this email or visit our <a href="[Your Help Center URL]">help center</a>.</p>
+                <p>Welcome aboard!</p>
+                <p>Best regards,<br>The CareFusion Team</p>
+            </div>
+            <div class="footer">
+                <p>&copy; [Year] [Your Company]. All rights reserved.</p>
+                <p>If you didn't sign up for this account, please <a href="[Contact URL]">contact us</a>.</p>
+            </div>
+        </div>
+    </body>
+    </html>`;
+    goMail(emailId,"CareFusion Signup",text);
     res.redirect("/login");
   } else {
     var message = "Username or Email already exists";
@@ -52,6 +142,7 @@ const loginAction = async (req, res) => {
     res.cookie('email', user[0].email, {maxAge: 900000, httpOnly: true });
     res.cookie('signUpAs', user[0].signedUpAs, {maxAge: 900000,  httpOnly: true });
     const profile = await provProfile.findOne({ email: user[0].email });
+    
     console.log(req.cookies.signUpAs)
       res.render("home", {
         user: user[0].signedUpAs,
@@ -367,8 +458,183 @@ const statusAction = async(req, res)=>{
     if (!profile) {
         return res.status(404).json({ message: 'Profile not found' });
     }
+    console.log(req.params.id);
     profile.blocked = !profile.blocked; // Toggle blocked status
     await profile.save();
+    if(profile.blocked)
+      {
+        const text = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Account Blocked</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    color: #333;
+                    margin: 0;
+                    padding: 0;
+                }
+                .container {
+                    width: 100%;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background-color: #ffffff;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                .header {
+                    background-color: #ff4f4f;
+                    color: #ffffff;
+                    padding: 20px;
+                    text-align: center;
+                }
+                .header h1 {
+                    margin: 0;
+                }
+                .content {
+                    padding: 20px;
+                }
+                .content h2 {
+                    color: #ff4f4f;
+                }
+                .content p {
+                    line-height: 1.6;
+                }
+                .button {
+                    display: inline-block;
+                    margin: 20px 0;
+                    padding: 10px 20px;
+                    background-color: #ff4f4f;
+                    color: #ffffff;
+                    text-decoration: none;
+                    border-radius: 5px;
+                }
+                .footer {
+                    background-color: #f4f4f4;
+                    color: #888888;
+                    text-align: center;
+                    padding: 10px;
+                    font-size: 12px;
+                }
+                .footer a {
+                    color: #ff4f4f;
+                    text-decoration: none;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Account Blocked</h1>
+                </div>
+                <div class="content">
+                    <h2>Hi ${profile.fullname},</h2>
+                    <p>We regret to inform you that your account with CareFusion has been temporarily blocked due to suspicious activity.</p>
+                    <p>If you believe this is a mistake, please contact our support team immediately for assistance.</p>
+                    <p>Thank you for your understanding.</p>
+                    <p>Best regards,<br>The CareFusion Team</p>
+                </div>
+                <div class="footer">
+                    <p>&copy; 2024 CareFusion. All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        `;
+    goMail(profile.email,"CareFusion Account Blocked",text);
+      }
+      else
+      {
+        const text = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Account Unblocked</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    color: #333;
+                    margin: 0;
+                    padding: 0;
+                }
+                .container {
+                    width: 100%;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background-color: #ffffff;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                .header {
+                    background-color: #4CAF50;
+                    color: #ffffff;
+                    padding: 20px;
+                    text-align: center;
+                }
+                .header h1 {
+                    margin: 0;
+                }
+                .content {
+                    padding: 20px;
+                }
+                .content h2 {
+                    color: #4CAF50;
+                }
+                .content p {
+                    line-height: 1.6;
+                }
+                .button {
+                    display: inline-block;
+                    margin: 20px 0;
+                    padding: 10px 20px;
+                    background-color: #4CAF50;
+                    color: #ffffff;
+                    text-decoration: none;
+                    border-radius: 5px;
+                }
+                .footer {
+                    background-color: #f4f4f4;
+                    color: #888888;
+                    text-align: center;
+                    padding: 10px;
+                    font-size: 12px;
+                }
+                .footer a {
+                    color: #4CAF50;
+                    text-decoration: none;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Account Unblocked</h1>
+                </div>
+                <div class="content">
+                    <h2>Hi ${profile.fullname},</h2>
+                    <p>We are pleased to inform you that your account with CareFusion has been unblocked and you can now access all our services.</p>
+                    <p>We appreciate your patience and understanding during this process. If you have any questions or need further assistance, please don't hesitate to contact our support team.</p>
+                    
+                    <p>Thank you for being a valued member of our community.</p>
+                    <p>Best regards,<br>The CareFusion Team</p>
+                </div>
+                <div class="footer">
+                    <p>&copy; 2024 CareFusion. All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+        `;
+    goMail(profile.email,"CareFusion Account UnBlocked",text);
+      }
     res.json({ message: 'Profile status updated' });
 } catch (err) {
     res.status(500).json({ message: err.message });

@@ -5,7 +5,7 @@
 }
 
 body {
-    background: url('/images/postJob.jpg') no-repeat center center fixed;
+    
     background-size: cover;
 
 }
@@ -38,8 +38,8 @@ body {
     transform: translate(-50%, -50%);
     color: white;
     text-align: center;
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 3.5rem;
+    
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a subtle shadow to the text */
 }
 .login-btn

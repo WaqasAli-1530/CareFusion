@@ -102,6 +102,7 @@ const jobView = async (req, res) => {
       const jobs = await jobpost.find({
         skill: { $in: skill },
         status: "Unassigned",
+        gender: provider.gender
       });
       if(jobs.length != 0)
         {
@@ -136,34 +137,42 @@ const providerProfile = (req, res) => {
 };
 const dashboard = async (req, res) => {
   const user = await provProfile.findOne({ email: req.cookies.email });
-  const id = user["_id"];
-  const comp = await jobpost.find({
-    assignProv: id,
-    status: "Complete",
-    payment: "Complete",
-  });
-  const cmp = comp.length;
-  var cmpPrive = 0;
-  for (let i = 0; i < comp.length; i++) {
-    cmpPrive += comp[i]["price"] - Math.floor(comp[i]["price"] * 0.1);
-  }
-  const pend = await jobpost.find({
-    assignProv: id,
-    status: { $in: ["Complete", "In Progress"] },
-    payment: "Pending",
-  });
-  const pendS = pend.length;
-  var pendPrice = 0;
-  for (let i = 0; i < pend.length; i++) {
-    pendPrice += pend[i]["price"] - Math.floor(pend[i]["price"] * 0.1);
-  }
-
-  res.render("prov-dashboard", {
-    rec: cmpPrive,
-    comp: cmp,
-    pend: pendPrice,
-    pendS: pendS,
-  });
+  console.log(user)
+  if(user == null)
+    {
+      res.render("provProfile");
+    }
+    else{
+      const id = user["_id"];
+      const comp = await jobpost.find({
+        assignProv: id,
+        status: "Complete",
+        payment: "Complete",
+      });
+      const cmp = comp.length;
+      var cmpPrive = 0;
+      for (let i = 0; i < comp.length; i++) {
+        cmpPrive += comp[i]["price"] - Math.floor(comp[i]["price"] * 0.1);
+      }
+      const pend = await jobpost.find({
+        assignProv: id,
+        status: { $in: ["Complete", "In Progress"] },
+        payment: "Pending",
+      });
+      const pendS = pend.length;
+      var pendPrice = 0;
+      for (let i = 0; i < pend.length; i++) {
+        pendPrice += pend[i]["price"] - Math.floor(pend[i]["price"] * 0.1);
+      }
+    
+      res.render("prov-dashboard", {
+        rec: cmpPrive,
+        comp: cmp,
+        pend: pendPrice,
+        pendS: pendS,
+      });
+    }
+  
 };
 const profile = async (req, res) => {
   res.render("profile", {

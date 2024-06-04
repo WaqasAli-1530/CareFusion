@@ -2,8 +2,8 @@
     function formValidations() {
         // Validate Phone Number (12 digits)
         var phoneInput = document.getElementById('phone');
-        if (phoneInput.value.length !== 12) {
-            alert('Phone number must be 12 digits');
+        if (phoneInput.value.length !== 11) {
+            alert('Phone number must be 11 digits');
             return false;
         }
 
